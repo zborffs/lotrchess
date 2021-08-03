@@ -1,41 +1,93 @@
-#include <functional>
-#include <iostream>
-
+#include <imgui.h>
+#include <imgui-SFML.h>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Clock.hpp>
+#include <SFML/Window/Event.hpp>
+#include <array>
 #include <spdlog/spdlog.h>
-#include <docopt/docopt.h>
+#include <iostream>
+#include "board.hpp"
+#include "board_view.hpp"
 
-static constexpr auto USAGE =
-  R"(Naval Fate.
+int main() {
+    /// initialize variables
+    constexpr auto width = 1280;
+    constexpr auto height = 1080;
+    constexpr auto title = "Lord of the Rings: Chess";
+    constexpr auto fps_limit = 30;
+    constexpr auto scale_factor = 2.0;
+    constexpr auto font_scale_factor = 1.0;
+    const sf::Vector2f board_offset(50., 75.);
+    const std::string board_texture_path("../../res/img/ChessBoard.png");
+    const std::unordered_map<char, std::string> texture_map_paths({
+        {'P', "../../res/img/Light_Pawn.png"},
+        {'R', "../../res/img/Light_Rook.png"},
+        {'N', "../../res/img/Light_Knight.png"},
+        {'B', "../../res/img/Light_Bishop.png"},
+        {'K', "../../res/img/Light_King.png"},
+        {'Q', "../../res/img/Light_Queen.png"},
+        {'p', "../../res/img/Dark_Pawn.png"},
+        {'r', "../../res/img/Dark_Rook.png"},
+        {'n', "../../res/img/Dark_Knight.png"},
+        {'b', "../../res/img/Dark_Bishop.png"},
+        {'k', "../../res/img/Dark_King.png"},
+        {'q', "../../res/img/Dark_Queen.png"}
+    });
 
-    Usage:
-          naval_fate ship new <name>...
-          naval_fate ship <name> move <x> <y> [--speed=<kn>]
-          naval_fate ship shoot <x> <y>
-          naval_fate mine (set|remove) <x> <y> [--moored | --drifting]
-          naval_fate (-h | --help)
-          naval_fate --version
- Options:
-          -h --help     Show this screen.
-          --version     Show version.
-          --speed=<kn>  Speed in knots [default: 10].
-          --moored      Moored (anchored) mine.
-          --drifting    Drifting mine.
-)";
+    Board board;
+    std::cout << board << std::endl;
+    BoardView board_view(board, board_offset, board_texture_path, texture_map_paths);
 
-int main(int argc, const char **argv)
-{
-  std::map<std::string, docopt::value> args = docopt::docopt(USAGE,
-    { std::next(argv), std::next(argv, argc) },
-    true,// show help if requested
-    "Naval Fate 2.0");// version string
+    sf::RenderWindow window(sf::VideoMode(width, height), title);
+    window.setFramerateLimit(fps_limit);
+    ImGui::SFML::Init(window);
 
-  for (auto const &arg : args) {
-    std::cout << arg.first << arg.second << std::endl;
-  }
+    ImGui::GetStyle().ScaleAllSizes(scale_factor);
+    ImGui::GetIO().FontGlobalScale = font_scale_factor;
+
+    constexpr std::array steps {
+        "Friendship",
+        "Is",
+        "For",
+        "Losers"
+    };
+    std::array<bool, steps.size()> states{};
+
+    sf::Clock deltaClock;
+
+    /// this is the main game loop
+    while (window.isOpen()) {
+        // while the window is still open
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            // poll every event that has occurred
+            ImGui::SFML::ProcessEvent(event);
+
+            if (event.type == sf::Event::Closed) {
+                // if the closed event was set, then close the window
+                window.close();
+            }
+        }
 
 
-  //Use the default logger (stdout, multi-threaded, colored)
-  spdlog::info("Hello, {}!", "World");
+        ImGui::SFML::Update(window, deltaClock.restart()); // update window
 
-  fmt::print("Hello, from {}\n", "{fmt}");
+        ImGui::Begin("The Plan!");
+        for (std::size_t index{0}; const auto& step : steps) {
+            ImGui::Checkbox(fmt::format("{} : {}", index, step).c_str(), &states.at(index));
+            ++index;
+        }
+        ImGui::End();
+
+        window.clear(); // clear the window
+
+        ImGui::SFML::Render(window); // render the window
+        board_view.draw(window);
+        window.display(); // display the window
+    }
+
+    ImGui::SFML::Shutdown(); // shut everything down
+
+    return 0;
 }
