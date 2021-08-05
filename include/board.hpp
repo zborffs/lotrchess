@@ -61,7 +61,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Board& board) {
         for (const auto& row : board.piece_locations_) {
             for (const auto& piece : row) {
-                os << piece << " ";
+                os << piece << "-";
             }
             os << std::endl;
         }

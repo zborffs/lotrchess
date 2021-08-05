@@ -20,9 +20,15 @@
 /// project includes
 #include "defines.hpp"
 #include "music_player.hpp"
+#include "extern.hpp"
 
 class LOTRChess; // context
 
+/**
+ * parent class of Mode objects: contains logic for transitioning to the next
+ * mode
+ * - State structural design pattern
+ */
 class Mode {
 protected:
     LOTRChess* context_;
@@ -37,6 +43,11 @@ public:
     }
 };
 
+/**
+ * The main application
+ * - maintains context of the current game mode.
+ * - owns the rendering window
+ */
 class LOTRChess {
 protected:
     friend class PlayMode;
@@ -44,19 +55,17 @@ protected:
     friend class BattleSetupMode;
 
 private:
-    std::unique_ptr<Mode> mode_;
-    std::vector<Mode> saved_modes_{};
-    sf::RenderWindow window_;
-    sf::Clock delta_clock_;
+    std::unique_ptr<Mode> mode_; // unique pointer to the current mode
+    sf::RenderWindow window_; // the window to which the game is rendering
+    sf::Clock delta_clock_; // keeps track of difference between renders
     MusicPlayer music_player_; // put maybe in parent gamestate class
+    // GameState state_; // whats the current gamestate
+    // ResourceFactory res_; //
+    // SnapShots snap_shots_; // incremental updates to the gamestate needed to achieve the current gamestate
 
 public:
-    explicit LOTRChess(const WindowData& wd, const std::array<std::string, 4>& music_paths, std::unique_ptr<Mode> init_mode);
-
-    ~LOTRChess() {
-        ImGui::SFML::Shutdown(); // shut everything down
-        spdlog::info("Destroyed LOTRChess");
-    }
+    explicit LOTRChess(std::unique_ptr<Mode> init_mode);
+    ~LOTRChess();
     void transition_to(Mode* mode);
     void operator()();
 };
