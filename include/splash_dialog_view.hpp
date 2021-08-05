@@ -1,38 +1,43 @@
 #ifndef LOTRCHESS_SPLASH_DIALOG_VIEW_HPP
 #define LOTRCHESS_SPLASH_DIALOG_VIEW_HPP
 
+/// third party includes
 #include <SFML/Graphics.hpp>
+
+/// stl includes
 #include <array>
+
+/// project includes
 #include "splash_dialog.hpp"
+#include "extern.hpp"
 
 class SplashDialogView {
 private:
-    const sf::Color default_color_{255, 255, 255, 255};
-    const sf::Color selected_color_{255, 215,0, 200};
     const sf::Vector2f bg_offset_{10., 10.};
-    const std::string font_path_{"../../res/font/lotr_font.ttf"};
-    const std::string bg_path_{"../../res/img/splash_bg.jpg"};
     const std::array<std::string, 4> mode_string_{"Campaign", "Custom Battle", "Replay", "Quit"};
     sf::Texture bg_texture_;
     sf::Sprite bg_;
     sf::Font font_{};
     sf::Text title_text_;
     std::array<sf::Text, 4> mode_selection_text_;
+    const unsigned int small_font_size{42};
+    const unsigned int medium_font_size{43};
+    const unsigned int large_font_size{72};
 
 public:
     SplashDialogView()  {
         // configure the background
-        bg_texture_.loadFromFile(bg_path_);
+        bg_texture_.loadFromFile(SPLASH_BG_PATH);
         bg_.setTexture(bg_texture_);
         bg_.setPosition(bg_offset_);
 
         // configure the font
-        font_.loadFromFile(font_path_);
+        font_.loadFromFile(FONT_PATH);
 
         // configure the title
         title_text_.setFont(font_);
         title_text_.setString("Lord of the Rings\n            Chess");
-        title_text_.setCharacterSize(72); // arbitrary
+        title_text_.setCharacterSize(large_font_size); // arbitrary
         title_text_.setPosition(bg_offset_);
         title_text_.move(bg_.getGlobalBounds().width / 5, bg_.getGlobalBounds().height / 5);
 
@@ -45,7 +50,7 @@ public:
         std::size_t index{1};
         for (auto& mode : mode_selection_text_) {
             mode.setFont(font_);
-            mode.setCharacterSize(42); // arbitrary
+            mode.setCharacterSize(small_font_size); // arbitrary
             mode.setString(mode_string_[index - 1]);
             mode.setPosition(pos);
             auto curr_mode_x_offset = (mode.findCharacterPos(mode.getString().getSize()).x - mode.findCharacterPos(0).x) / 2;
@@ -56,10 +61,13 @@ public:
 
     void update_options(SplashDialog& dialog) {
         for (auto& m : mode_selection_text_) {
-            m.setFillColor(default_color_);
+            m.setFillColor(DEFAULT_FONT_COLOR);
+            m.setCharacterSize(small_font_size);
         }
+
         if (dialog.selection() != None) {
-            mode_selection_text_[dialog.selection()].setFillColor(selected_color_);
+            mode_selection_text_[dialog.selection()].setFillColor(SELECTED_FONT_COLOR);
+            mode_selection_text_[dialog.selection()].setCharacterSize(medium_font_size);
         }
     }
 

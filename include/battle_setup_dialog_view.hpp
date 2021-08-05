@@ -5,18 +5,10 @@
 #include "toggle_button.hpp"
 #include <SFML/Graphics.hpp>
 #include <array>
+#include "extern.hpp"
 
 class BattleSetupDialogView {
-//    const sf::Color default_color_{10, 10, 10, 255};
-//    const sf::Color selected_color_{255, 215,0, 255};
-//    const sf::Color hovering_color_{240, 200,0, 255};
-//    const sf::Color default_font_color_{255, 255, 255, 255};
-//    const sf::Color hovering_font_color_{255, 255, 255, 255};
-//    const sf::Color selected_font_color_{255, 255, 255, 255};
-
     const sf::Vector2f bg_offset_{10., 10.};
-    const std::string font_path_{"../../res/font/lotr_font.ttf"};
-    const std::string bg_path_{"../../res/img/splash_bg.jpg"};
     const std::array<std::string, 2> option_string_{"Color", "Strength"};
     sf::Texture bg_texture_;
     sf::Sprite bg_;
@@ -27,12 +19,12 @@ class BattleSetupDialogView {
 public:
     BattleSetupDialogView() {
         // configure the background
-        bg_texture_.loadFromFile(bg_path_);
+        bg_texture_.loadFromFile(SPLASH_BG_PATH);
         bg_.setTexture(bg_texture_);
         bg_.setPosition(bg_offset_);
 
         // configure the font
-        font_.loadFromFile(font_path_);
+        font_.loadFromFile(FONT_PATH);
 
         // configure the title
         title_text_.setFont(font_);
