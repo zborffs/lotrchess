@@ -1,6 +1,6 @@
 #include "board.hpp"
 
-Board::Board(const std::string& fen) {
+Board::Board(const std::string& fen) : highlights_({}) {
 
     // assume that the fen has been passed in correctly
     std::size_t r{0};
@@ -28,4 +28,7 @@ Board::Board(const std::string& fen) {
     assert(fen_commands[1].size() == 1);
 
     side_2_move_ = fen_commands[1][0] == 'w' ? Color::WHITE : Color::BLACK;
+}
+void Board::add_highlight(Square_t sq) {
+    highlights_.push_back(sq);
 }

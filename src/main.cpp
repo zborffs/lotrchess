@@ -1,17 +1,22 @@
+/// third party includes
 #include <imgui.h>
 #include <imgui-SFML.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
-#include <array>
 #include <spdlog/spdlog.h>
-#include <iostream>
+
+/// stl includes
+#include <array>
+
+/// project includes
 #include "board.hpp"
 #include "board_view.hpp"
 
 int main() {
-    /// initialize variables
+
+    /// initialize constant variables
     constexpr auto width = 1280;
     constexpr auto height = 1080;
     constexpr auto title = "Lord of the Rings: Chess";
@@ -20,6 +25,7 @@ int main() {
     constexpr auto font_scale_factor = 1.0;
     const sf::Vector2f board_offset(50., 75.);
     const std::string board_texture_path("../../res/img/ChessBoard.png");
+    const std::string one_ring_texture_path("../../res/img/one_ring.png");
     const std::unordered_map<char, std::string> texture_map_paths({
         {'P', "../../res/img/Light_Pawn.png"},
         {'R', "../../res/img/Light_Rook.png"},
@@ -35,55 +41,85 @@ int main() {
         {'q', "../../res/img/Dark_Queen.png"}
     });
 
-    Board board;
-    std::cout << board << std::endl;
-    BoardView board_view(board, board_offset, board_texture_path, texture_map_paths);
+    /// create the game objects
+    Board board; // board model
+    BoardView board_view(board, board_offset, board_texture_path, one_ring_texture_path, texture_map_paths); // board view
 
+    /// create the window object and set the max frame rate
     sf::RenderWindow window(sf::VideoMode(width, height), title);
     window.setFramerateLimit(fps_limit);
     ImGui::SFML::Init(window);
+    sf::Clock deltaClock; // change in time between frames
 
+    /// scale the fonts and the objects
     ImGui::GetStyle().ScaleAllSizes(scale_factor);
     ImGui::GetIO().FontGlobalScale = font_scale_factor;
 
-    constexpr std::array steps {
-        "Friendship",
-        "Is",
-        "For",
-        "Losers"
-    };
-    std::array<bool, steps.size()> states{};
 
-    sf::Clock deltaClock;
-
-    /// this is the main game loop
+    /// main game-loop
     while (window.isOpen()) {
-        // while the window is still open
+        // while the window is still open, process the events and draw the objects
+
+
         sf::Event event;
         while (window.pollEvent(event)) {
             // poll every event that has occurred
             ImGui::SFML::ProcessEvent(event);
 
-            if (event.type == sf::Event::Closed) {
-                // if the closed event was set, then close the window
+            switch (event.type) {
+            case sf::Event::Closed: {
+                // if it was a close window event, then close the window
                 window.close();
+                break;
+            }
+            case sf::Event::KeyPressed: {
+                if (event.key.code == sf::Keyboard::R) {
+                    // if the user pressed 'R' then reverse the board
+                    spdlog::info("R was pressed!");
+                    board.switch_sides(); // update the model
+                    board_view.update_pieces(board); // update the view's understanding of the model
+                }
+            }
+            case sf::Event::MouseButtonPressed: {
+                int x = event.mouseButton.x;
+                int y = event.mouseButton.y;
+
+                if (board_view.in_board(x, y)) {
+                    // if the user pressed on the mouse inside the board's bounding box, then figure out what square was clicked
+                    sf::Vector2f board_view_offset = board_view.board_offset();
+                    int col = static_cast<int>((static_cast<float>(x) - board_view_offset.x) / 100);
+                    int row = static_cast<int>((static_cast<float>(y) - board_view_offset.y) / 100);
+
+                    // to determine what the square was, we need to check if the board is reversed or not on the screen
+                    Square_t sq {Square::EP_DEFAULT};
+                    if (board.as_white()) {
+                        sq = static_cast<Square_t>(col + (7 - row) * 8);
+                    } else {
+                        sq = static_cast<Square_t>((7 - col) + row * 8);
+                    }
+
+
+                    board.add_highlight(sq); // add a highlight on the square that was clicked
+                    board_view.update_pieces(board); // update the pieces
+                }
+            }
+            default:
+                spdlog::trace("Unhanded event type in game-loop");
             }
         }
 
+        ImGui::SFML::Update(window, deltaClock.restart()); // let SFML update the window
 
-        ImGui::SFML::Update(window, deltaClock.restart()); // update window
-
-        ImGui::Begin("The Plan!");
-        for (std::size_t index{0}; const auto& step : steps) {
-            ImGui::Checkbox(fmt::format("{} : {}", index, step).c_str(), &states.at(index));
-            ++index;
-        }
-        ImGui::End();
+//        ImGui::Begin("The Plan!");
+//        for (std::size_t index{0}; const auto& step : steps) {
+//            ImGui::Checkbox(fmt::format("{} : {}", index, step).c_str(), &states.at(index));
+//            ++index;
+//        }
+//        ImGui::End();
 
         window.clear(); // clear the window
-
         ImGui::SFML::Render(window); // render the window
-        board_view.draw(window);
+        board_view.draw(window); // draw the window
         window.display(); // display the window
     }
 
