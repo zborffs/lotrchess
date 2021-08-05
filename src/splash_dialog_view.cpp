@@ -1,0 +1,1 @@
+#include "splash_dialog_view.hpp"

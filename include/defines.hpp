@@ -2,8 +2,53 @@
 #define LOTRCHESS_DEFINES_HPP
 
 #include <cstdint>
+#include <string>
+#include <utility>
 using Square_t = uint8_t;
 
+struct WindowData {
+    unsigned int width;
+    unsigned int height;
+    unsigned int fps_limit;
+    float scale_factor;
+    float font_scale_factor;
+    std::string title;
+
+    WindowData(unsigned int width, unsigned int height, unsigned int fps_limit,
+               float scale_factor, float font_scale_factor, std::string  title) :
+    width(width), height(height), fps_limit(fps_limit), scale_factor(scale_factor),
+   font_scale_factor(font_scale_factor), title(std::move(title)) {}
+};
+
+enum SplashSelector {
+    Campaign = 0,
+    CustomBattle = 1,
+    Replay = 2,
+    Quit = 3,
+    None = 4
+};
+
+/*
+ * General corresponds to which engine you play, and by extension the difficulty
+ * - Faile ~ Easy
+ *   - White: Merry & Pippin
+ *   - Black: Golfimbul
+ * - Senpai ~ Medium
+ *   - White: Faramir
+ *   - Black: Uglúk
+ * - Prometheus ~ Hard
+ *   - White: Éomer
+ *   - Black: Gothmog
+ * - Stockfish ~ Very Hard
+ *   - White: Aragorn
+ *   - Black: Witch King of Angmar
+ */
+enum Engine {
+    Faile = 0,
+    Senpai = 1,
+    Prometheus = 2,
+    Stockfish = 3
+};
 
 enum Square : uint8_t {
   A1 = 0, A2 =  8, A3 = 16, A4 = 24, A5 = 32, A6 = 40, A7 = 48, A8 = 56,

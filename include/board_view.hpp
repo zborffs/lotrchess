@@ -31,7 +31,7 @@ private:
     std::vector<sf::Sprite> highlighted_sqs_; // highlighted squares
 
 public:
-    explicit BoardView(const Board& board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map);
+    BoardView(const Board& board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map);
 
     void update_pieces(const Board& board);
     void draw(sf::RenderWindow& draw);

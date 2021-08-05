@@ -26,7 +26,7 @@ private:
     std::vector<Square_t> highlights_;
 
 public:
-    explicit Board(const std::string& fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w");
+    Board(const std::string& fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w");
 
     [[nodiscard]] inline char piece_at(const Square sq) const {
         return piece_locations_[sq / 8][sq % 8];
