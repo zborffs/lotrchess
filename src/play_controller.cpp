@@ -1,6 +1,6 @@
-#include "board.hpp"
+#include "play_controller.hpp"
 
-Board::Board(const std::string& fen) : highlights_({}) {
+PlayController::PlayController(const std::string& fen) : highlights_({}) {
 
     // assume that the fen has been passed in correctly
     std::size_t r{0};
@@ -29,7 +29,7 @@ Board::Board(const std::string& fen) : highlights_({}) {
 
     side_2_move_ = fen_commands[1][0] == 'w' ? Color::WHITE : Color::BLACK;
 }
-void Board::add_highlight(Square_t sq) {
+void PlayController::add_highlight(Square_t sq) {
     highlights_.push_back(sq);
 }
 
@@ -42,7 +42,7 @@ void Board::add_highlight(Square_t sq) {
  * @param sq
  * @return
  */
-bool Board::valid_highlight(Square_t sq) {
+bool PlayController::valid_highlight(Square_t sq) {
     if (std::find(highlights_.begin(), highlights_.end(), sq) != highlights_.end()) {
         // if the square is already in the list, return false
         return false;
@@ -59,6 +59,6 @@ bool Board::valid_highlight(Square_t sq) {
 
     return false;
 }
-void Board::clear_highlights() {
+void PlayController::clear_highlights() {
     highlights_.clear();
 }

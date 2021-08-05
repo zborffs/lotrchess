@@ -1,4 +1,4 @@
-#include "play_mode.hpp"
+#include "play_screen.hpp"
 
 void PlayScreen::process_event(sf::Event &event) {
     // poll every event that has occurred

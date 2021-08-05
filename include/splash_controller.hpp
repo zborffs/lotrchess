@@ -1,14 +1,14 @@
-#ifndef LOTRCHESS_SPLASH_DIALOG_HPP
-#define LOTRCHESS_SPLASH_DIALOG_HPP
+#ifndef LOTRCHESS_SPLASH_CONTROLLER_HPP
+#define LOTRCHESS_SPLASH_CONTROLLER_HPP
 
 #include "defines.hpp"
 
-class SplashDialog {
+class SplashController {
 private:
     SplashSelector selection_;
 
 public:
-    explicit SplashDialog();
+    explicit SplashController();
 
     [[nodiscard]] inline SplashSelector selection() noexcept {
         return selection_;
@@ -23,4 +23,4 @@ public:
     }
 };
 
-#endif // LOTRCHESS_SPLASH_DIALOG_HPP
+#endif // LOTRCHESS_SPLASH_CONTROLLER_HPP

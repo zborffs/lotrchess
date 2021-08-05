@@ -1,13 +1,20 @@
-#ifndef LOTRCHESS_BATTLE_SETUP_DIALOG_VIEW_HPP
-#define LOTRCHESS_BATTLE_SETUP_DIALOG_VIEW_HPP
+#ifndef LOTRCHESS_BATTLE_SETUP_VIEW_HPP
+#define LOTRCHESS_BATTLE_SETUP_VIEW_HPP
 
-#include "battle_setup_dialog.hpp"
+#include "battle_setup_controller.hpp"
+#include "extern.hpp"
 #include "toggle_button.hpp"
 #include <SFML/Graphics.hpp>
 #include <array>
-#include "extern.hpp"
 
-class BattleSetupDialogView {
+/**
+ * The "View" (in context of MVC) for the Battle Setup Screen
+ * - responsible for:
+ *   1. maintaining all graphics objects when in the Battle Setup screen
+ *   2. transforming graphics data given the control parameters in the
+ *   BattleSetupController class
+ */
+class BattleSetupView {
     const sf::Vector2f bg_offset_{10., 10.};
     const std::array<std::string, 2> option_string_{"Color", "Strength"};
     sf::Texture bg_texture_;
@@ -17,7 +24,7 @@ class BattleSetupDialogView {
     std::array<sf::Text, 2> option_text_;
 
 public:
-    BattleSetupDialogView() {
+  BattleSetupView() {
         // configure the background
         bg_texture_.loadFromFile(SPLASH_BG_PATH);
         bg_.setTexture(bg_texture_);
@@ -47,7 +54,7 @@ public:
         }
     }
 
-//    void update_options(BattleSetupDialog& dialog) {
+//    void update_options(BattleSetupController& dialog) {
 //        for (auto& m : mode_selection_text_) {
 //            m.setFillColor(default_color_);
 //        }
@@ -66,4 +73,4 @@ public:
     }
 };
 
-#endif // LOTRCHESS_BATTLE_SETUP_DIALOG_VIEW_HPP
+#endif // LOTRCHESS_BATTLE_SETUP_VIEW_HPP

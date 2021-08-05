@@ -1,14 +1,14 @@
 #ifndef LOTRCHESS_BATTLE_SETUP_SCREEN_HPP
 #define LOTRCHESS_BATTLE_SETUP_SCREEN_HPP
 
+#include "battle_setup_controller.hpp"
+#include "battle_setup_view.hpp"
 #include "lotrchess.hpp"
-#include "battle_setup_dialog.hpp"
-#include "battle_setup_dialog_view.hpp"
-#include "play_mode.hpp"
+#include "play_screen.hpp"
 
 class BattleSetupScreen : public Screen {
-    BattleSetupDialog dialog_;
-    BattleSetupDialogView dialog_view_;
+    BattleSetupController dialog_;
+    BattleSetupView dialog_view_;
 
 public:
     explicit BattleSetupScreen() {

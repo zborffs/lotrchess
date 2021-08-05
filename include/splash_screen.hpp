@@ -3,16 +3,16 @@
 
 #include "battle_setup_screen.hpp"
 #include "lotrchess.hpp"
-#include "play_mode.hpp"
-#include "splash_dialog.hpp"
-#include "splash_dialog_view.hpp"
+#include "play_screen.hpp"
+#include "splash_controller.hpp"
+#include "splash_view.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <spdlog/spdlog.h>
 
 class SplashScreen : public Screen {
-    SplashDialog dialog_;
-    SplashDialogView dialog_view_;
+  SplashController dialog_;
+    SplashView dialog_view_;
 
 public:
     explicit SplashScreen() {

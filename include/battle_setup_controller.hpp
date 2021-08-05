@@ -1,14 +1,24 @@
 #ifndef LOTRCHESS_BATTLE_DIALOG_HPP
 #define LOTRCHESS_BATTLE_DIALOG_HPP
 
+/// third party includes
+#include <spdlog/spdlog.h>
+
+/// project includes
 #include "defines.hpp"
 
-class BattleSetupDialog {
-    Color human_color_;
-    Engine engine_;
+/**
+ * Controller (in MVC context) of the Battle Setup Screen
+ * - responsible for:
+ *   1. managing state information when on the Battle Setup Screen
+ */
+class BattleSetupController {
+    Color human_color_; // the color the player has selected
+    Engine engine_; // the engine the player selected to play against
 
 public:
-    explicit BattleSetupDialog();
+    explicit BattleSetupController();
+    ~BattleSetupController();
 
     [[nodiscard]] inline Color human_color() noexcept {
         return human_color_;

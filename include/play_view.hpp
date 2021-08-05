@@ -1,5 +1,5 @@
-#ifndef LOTRCHESS_BOARD_VIEW_HPP
-#define LOTRCHESS_BOARD_VIEW_HPP
+#ifndef LOTRCHESS_PLAY_VIEW_HPP
+#define LOTRCHESS_PLAY_VIEW_HPP
 
 /// third party libs
 #include <SFML/Graphics/Sprite.hpp>
@@ -14,13 +14,12 @@
 
 /// project includes
 #include "defines.hpp"
-#include "board.hpp"
-
+#include "play_controller.hpp"
 
 /**
  * class responsible for holding the graphics objects related to the board
  */
-class BoardView {
+class PlayView {
 private:
     sf::Texture board_texture_; // board texture (.png)
     sf::Sprite board_; // board sprite (drawable object in SFML)
@@ -31,9 +30,9 @@ private:
     std::vector<sf::Sprite> highlighted_sqs_; // highlighted squares
 
 public:
-    BoardView(const Board& board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map);
+  PlayView(const PlayController & board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map);
 
-    void update_pieces(const Board& board);
+    void update_pieces(const PlayController & board);
     void draw(sf::RenderWindow& draw);
 
     /**
@@ -55,4 +54,4 @@ public:
     bool in_board(int x, int y);
 };
 
-#endif // LOTRCHESS_BOARD_VIEW_HPP
+#endif // LOTRCHESS_PLAY_VIEW_HPP

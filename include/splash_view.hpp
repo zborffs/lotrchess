@@ -1,5 +1,5 @@
-#ifndef LOTRCHESS_SPLASH_DIALOG_VIEW_HPP
-#define LOTRCHESS_SPLASH_DIALOG_VIEW_HPP
+#ifndef LOTRCHESS_SPLASH_VIEW_HPP
+#define LOTRCHESS_SPLASH_VIEW_HPP
 
 /// third party includes
 #include <SFML/Graphics.hpp>
@@ -8,10 +8,10 @@
 #include <array>
 
 /// project includes
-#include "splash_dialog.hpp"
 #include "extern.hpp"
+#include "splash_controller.hpp"
 
-class SplashDialogView {
+class SplashView {
 private:
     const sf::Vector2f bg_offset_{10., 10.};
     const std::array<std::string, 4> mode_string_{"Campaign", "Custom Battle", "Replay", "Quit"};
@@ -25,7 +25,7 @@ private:
     const unsigned int large_font_size{72};
 
 public:
-    SplashDialogView()  {
+  SplashView()  {
         // configure the background
         bg_texture_.loadFromFile(SPLASH_BG_PATH);
         bg_.setTexture(bg_texture_);
@@ -59,7 +59,7 @@ public:
         }
     }
 
-    void update_options(SplashDialog& dialog) {
+    void update_options(SplashController & dialog) {
         for (auto& m : mode_selection_text_) {
             m.setFillColor(DEFAULT_FONT_COLOR);
             m.setCharacterSize(small_font_size);
@@ -122,4 +122,4 @@ public:
     }
 };
 
-#endif // LOTRCHESS_SPLASH_DIALOG_VIEW_HPP
+#endif // LOTRCHESS_SPLASH_VIEW_HPP

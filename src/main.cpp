@@ -6,7 +6,7 @@
 
 /// project includes
 #include "lotrchess.hpp"
-#include "play_mode.hpp"
+#include "play_screen.hpp"
 
 int main() {
     LOTRChess app(std::make_unique<PlayScreen>()); // create the client app

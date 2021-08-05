@@ -1,5 +1,5 @@
-#ifndef LOTRCHESS_BOARD_HPP
-#define LOTRCHESS_BOARD_HPP
+#ifndef LOTRCHESS_PLAY_CONTROLLER_HPP
+#define LOTRCHESS_PLAY_CONTROLLER_HPP
 
 /// lotrchess defines
 #include "defines.hpp"
@@ -14,11 +14,11 @@
 #include <iostream>
 
 /**
- * keeps track of the current chess position and the graphics (model of the BoardView)
+ * keeps track of the current chess position and the graphics (model of the PlayView)
  * - where pieces are
  * - whose turn it is
  */
-class Board {
+class PlayController {
 private:
     std::array<std::array<char, 8>, 8> piece_locations_{}; // a1 = [0][0], a8 = [0][7]
     Color side_2_move_;
@@ -26,7 +26,7 @@ private:
     std::vector<Square_t> highlights_;
 
 public:
-    Board(const std::string& fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w");
+  PlayController(const std::string& fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w");
 
     [[nodiscard]] inline char piece_at(const Square sq) const {
         return piece_locations_[sq / 8][sq % 8];
@@ -58,7 +58,7 @@ public:
 
     void clear_highlights();
 
-    friend std::ostream& operator<<(std::ostream& os, const Board& board) {
+    friend std::ostream& operator<<(std::ostream& os, const PlayController & board) {
         for (const auto& row : board.piece_locations_) {
             for (const auto& piece : row) {
                 os << piece << "-";
@@ -80,4 +80,4 @@ public:
     }
 };
 
-#endif // LOTRCHESS_BOARD_HPP
+#endif // LOTRCHESS_PLAY_CONTROLLER_HPP

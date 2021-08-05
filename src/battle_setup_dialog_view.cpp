@@ -1,1 +1,0 @@
-#include "battle_setup_dialog_view.hpp"

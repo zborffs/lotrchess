@@ -1,17 +1,17 @@
-#include "board_view.hpp"
+#include "play_view.hpp"
 
-BoardView::BoardView(const Board& board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map) : highlighted_sqs_({}){
+PlayView::PlayView(const PlayController & board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map) : highlighted_sqs_({}){
 
     // initialize board texture
     if (!board_texture_.loadFromFile(board_texture_path)) {
-        spdlog::error("Failed to load the board texture in BoardView constructor...");
+        spdlog::error("Failed to load the board texture in PlayView constructor...");
     }
     board_.setTexture(board_texture_);
     board_.setPosition(board_offset); // absolute position
 
     // initialize one ring texture
     if (!one_ring_texture_.loadFromFile(one_ring_path)) {
-        spdlog::error("Failed to load the one ring texture in BoardView constructor...");
+        spdlog::error("Failed to load the one ring texture in PlayView constructor...");
     }
     one_ring_sprite_.setTexture(one_ring_texture_);
 
@@ -20,7 +20,7 @@ BoardView::BoardView(const Board& board, sf::Vector2f board_offset, const std::s
         // load the file in the path, then insert the texture to the map
         sf::Texture texture;
         if (!texture.loadFromFile(kv_pair.second)) {
-            spdlog::error("Failed to load the {} texture in BoardView constructor...", kv_pair.second);
+            spdlog::error("Failed to load the {} texture in PlayView constructor...", kv_pair.second);
         }
         piece_texture_map_[kv_pair.first] = texture;
     }
@@ -28,7 +28,7 @@ BoardView::BoardView(const Board& board, sf::Vector2f board_offset, const std::s
     update_pieces(board);
 }
 
-void BoardView::update_pieces(const Board& board) {
+void PlayView::update_pieces(const PlayController & board) {
     // initialize piece_sprites_ (where do which sprites go?)
     piece_sprites_.clear();
     highlighted_sqs_.clear();
@@ -66,7 +66,7 @@ void BoardView::update_pieces(const Board& board) {
     }
 }
 
-void BoardView::draw(sf::RenderWindow& window) {
+void PlayView::draw(sf::RenderWindow& window) {
     window.draw(board_); // draw the board
 
     // draw highlights on the board
@@ -88,7 +88,7 @@ void BoardView::draw(sf::RenderWindow& window) {
  * @param y coordinate along y-axis in pixels
  * @return true if inside bounding box of chessboard sprite, false otherwise
  */
-bool BoardView::in_board(int x, int y) {
+bool PlayView::in_board(int x, int y) {
     // compute bounding box
     auto min_y = board_.getGlobalBounds().top;
     auto min_x = board_.getGlobalBounds().left;

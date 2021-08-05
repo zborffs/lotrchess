@@ -1,13 +1,17 @@
 #ifndef LOTRCHESS_EXTERN_HPP
 #define LOTRCHESS_EXTERN_HPP
 
-/// project includes
-#include "defines.hpp"
+/// third party includes
+#include <SFML/Graphics/Color.hpp>
 
 /// stl includes
 #include <string>
 #include <array>
 #include <unordered_map>
+
+/// project includes
+#include "defines.hpp"
+
 
 /// window constants
 extern const unsigned int WINDOW_WIDTH;
