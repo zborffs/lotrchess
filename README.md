@@ -8,10 +8,10 @@
   - Options Class -> Same deal
   - Back Button Class
   - Toggle Button: 
-- Save / serialize game state -> for example the whose turn it is and the current postion
+- Save / serialize game state -> for example whose turn it is and the current position
 - read pgn or output from c-chess-cli to playback in real-time what was happening
 - inheritance between view clases?
 - inheritance between dialog clases?
-- Flyweight pattern?
+- Flyweight pattern? // this is already sort of done (or SFML gives us the option to do this or does it itself)
 - Replay games
 - multithreading for reading from engine + updating things on screen etc. etc.

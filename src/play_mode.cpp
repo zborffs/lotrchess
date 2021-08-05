@@ -1,6 +1,6 @@
 #include "play_mode.hpp"
 
-void PlayMode::process_event(sf::Event &event) {
+void PlayScreen::process_event(sf::Event &event) {
     // poll every event that has occurred
     ImGui::SFML::ProcessEvent(event);
 
@@ -30,7 +30,7 @@ void PlayMode::process_event(sf::Event &event) {
             context_->music_player_.play_victory_music(BLACK);
         } else if (event.key.code == sf::Keyboard::Escape) {
             spdlog::info("ESC was pressed...");
-            context_->transition_to(new SplashMode());
+            context_->transition_to(new SplashScreen());
         }
     }
     case sf::Event::MouseButtonPressed: {
@@ -61,9 +61,9 @@ void PlayMode::process_event(sf::Event &event) {
         }
     }
     default:
-        spdlog::trace("Unhanded event type in PlayMode");
+        spdlog::trace("Unhanded event type in PlayScreen");
     }
 }
-void PlayMode::draw(sf::RenderWindow &window) {
+void PlayScreen::draw(sf::RenderWindow &window) {
     board_view_.draw(window);
 }

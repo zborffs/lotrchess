@@ -1,7 +1,6 @@
-#include "splash_mode.hpp"
+#include "splash_screen.hpp"
 
-
-void SplashMode::process_event(sf::Event &event) {
+void SplashScreen::process_event(sf::Event &event) {
     ImGui::SFML::ProcessEvent(event);
 
     switch (event.type) {
@@ -49,8 +48,8 @@ void SplashMode::process_event(sf::Event &event) {
             break;
         case CustomBattle:
             spdlog::info("Custom Battle Selected...");
-//            context_->transition_to(new PlayMode());
-            context_->transition_to(new BattleSetupMode());
+//            context_->transition_to(new PlayScreen());
+            context_->transition_to(new BattleSetupScreen());
             break;
         case Replay:
             spdlog::info("Replay Selected...");
@@ -66,10 +65,10 @@ void SplashMode::process_event(sf::Event &event) {
 
     }
     default:
-        spdlog::trace("Unhandled case in SplashMode...");
+        spdlog::trace("Unhandled case in SplashScreen...");
     }
 }
 
-void SplashMode::draw(sf::RenderWindow &window) {
+void SplashScreen::draw(sf::RenderWindow &window) {
     dialog_view_.draw(window);
 }

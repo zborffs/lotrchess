@@ -1,30 +1,30 @@
-#ifndef LOTRCHESS_SPLASH_MODE_HPP
-#define LOTRCHESS_SPLASH_MODE_HPP
+#ifndef LOTRCHESS_SPLASH_SCREEN_HPP
+#define LOTRCHESS_SPLASH_SCREEN_HPP
 
+#include "battle_setup_screen.hpp"
 #include "lotrchess.hpp"
+#include "play_mode.hpp"
 #include "splash_dialog.hpp"
 #include "splash_dialog_view.hpp"
-#include "play_mode.hpp"
-#include "battle_setup_mode.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <spdlog/spdlog.h>
 
-class SplashMode : public Mode {
+class SplashScreen : public Screen {
     SplashDialog dialog_;
     SplashDialogView dialog_view_;
 
 public:
-    explicit SplashMode() {
-        spdlog::info("Created SplashMode");
+    explicit SplashScreen() {
+        spdlog::info("Created SplashScreen");
     }
 
-    ~SplashMode() {
-        spdlog::info("Destroyed SplashMode");
+    ~SplashScreen() {
+        spdlog::info("Destroyed SplashScreen");
     }
 
     void process_event(sf::Event& event) override;
     void draw(sf::RenderWindow& window) override;
 };
 
-#endif // LOTRCHESS_SPLASH_MODE_HPP
+#endif // LOTRCHESS_SPLASH_SCREEN_HPP

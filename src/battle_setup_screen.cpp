@@ -1,5 +1,5 @@
-#include "battle_setup_mode.hpp"
-void BattleSetupMode::process_event(sf::Event& event) {
+#include "battle_setup_screen.hpp"
+void BattleSetupScreen::process_event(sf::Event& event) {
     ImGui::SFML::ProcessEvent(event);
 
     switch (event.type) {
@@ -17,9 +17,9 @@ void BattleSetupMode::process_event(sf::Event& event) {
         break;
     }
     default:
-      spdlog::trace("Unhandled case in SplashMode...");
+      spdlog::trace("Unhandled case in SplashScreen...");
     }
 }
-void BattleSetupMode::draw(sf::RenderWindow& window) {
+void BattleSetupScreen::draw(sf::RenderWindow& window) {
     dialog_view_.draw(window);
 }
