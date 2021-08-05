@@ -32,3 +32,33 @@ Board::Board(const std::string& fen) : highlights_({}) {
 void Board::add_highlight(Square_t sq) {
     highlights_.push_back(sq);
 }
+
+/**
+ * returns true if the square being selected being highlighted is "valid"
+ * - must be the player's turn to move
+ * - must be the player's pieces
+ * - must be a player's piece that has a move [done]
+ * - must not already be highlighted [done]
+ * @param sq
+ * @return
+ */
+bool Board::valid_highlight(Square_t sq) {
+    if (std::find(highlights_.begin(), highlights_.end(), sq) != highlights_.end()) {
+        // if the square is already in the list, return false
+        return false;
+    }
+
+    char piece = piece_locations_[sq / 8][sq % 8];
+    if (piece >= 'a' && piece <= 'z' && side_2_move_ == BLACK) {
+        // piece is black
+        return true;
+    } else if (piece >= 'A' && piece <= 'Z' && side_2_move_ == WHITE) {
+        // piece is white
+        return true;
+    }
+
+    return false;
+}
+void Board::clear_highlights() {
+    highlights_.clear();
+}

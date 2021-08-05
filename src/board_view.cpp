@@ -67,14 +67,17 @@ void BoardView::update_pieces(const Board& board) {
 }
 
 void BoardView::draw(sf::RenderWindow& window) {
-    window.draw(board_);
-    for (const auto& sprite : piece_sprites_) {
-        window.draw(sprite);
-    }
+    window.draw(board_); // draw the board
 
+    // draw highlights on the board
     for (auto& sq : highlighted_sqs_) {
         sq.rotate(0.9f);
         window.draw(sq);
+    }
+
+    // draw the pieces on the board
+    for (const auto& sprite : piece_sprites_) {
+        window.draw(sprite);
     }
 }
 

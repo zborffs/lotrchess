@@ -6,6 +6,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 #include <spdlog/spdlog.h>
+#include <SFML/Audio/Music.hpp>
 
 /// stl includes
 #include <array>
@@ -13,6 +14,7 @@
 /// project includes
 #include "board.hpp"
 #include "board_view.hpp"
+#include "music_player.hpp"
 
 int main() {
 
@@ -40,10 +42,17 @@ int main() {
         {'k', "../../res/img/Dark_King.png"},
         {'q', "../../res/img/Dark_Queen.png"}
     });
+    const std::array<std::string, 4> music_paths({
+        "../../res/music/white_startup_music.wav",
+        "../../res/music/white_victory_music.wav",
+        "../../res/music/black_startup_music.wav",
+        "../../res/music/black_victory_music.wav",
+    });
 
     /// create the game objects
     Board board; // board model
     BoardView board_view(board, board_offset, board_texture_path, one_ring_texture_path, texture_map_paths); // board view
+    MusicPlayer music_player(music_paths);
 
     /// create the window object and set the max frame rate
     sf::RenderWindow window(sf::VideoMode(width, height), title);
@@ -75,9 +84,21 @@ int main() {
             case sf::Event::KeyPressed: {
                 if (event.key.code == sf::Keyboard::R) {
                     // if the user pressed 'R' then reverse the board
-                    spdlog::info("R was pressed!");
+                    spdlog::info("R was pressed");
                     board.switch_sides(); // update the model
                     board_view.update_pieces(board); // update the view's understanding of the model
+                } else if (event.key.code == sf::Keyboard::A) {
+                    spdlog::info("A was pressed...");
+                    music_player.play_startup_music(WHITE);
+                } else if (event.key.code == sf::Keyboard::S) {
+                    spdlog::info("S was pressed...");
+                    music_player.play_startup_music(BLACK);
+                } else if (event.key.code == sf::Keyboard::D) {
+                    spdlog::info("D was pressed...");
+                    music_player.play_victory_music(WHITE);
+                } else if (event.key.code == sf::Keyboard::F) {
+                    spdlog::info("F was pressed...");
+                    music_player.play_victory_music(BLACK);
                 }
             }
             case sf::Event::MouseButtonPressed: {
@@ -98,9 +119,13 @@ int main() {
                         sq = static_cast<Square_t>((7 - col) + row * 8);
                     }
 
-
-                    board.add_highlight(sq); // add a highlight on the square that was clicked
-                    board_view.update_pieces(board); // update the pieces
+                    if (board.valid_highlight(sq)) {
+                        board.add_highlight(sq); // add a highlight on the square that was clicked
+                        board_view.update_pieces(board); // update the pieces
+                    } else {
+                        board.clear_highlights(); // add a highlight on the square that was clicked
+                        board_view.update_pieces(board); // update the pieces
+                    }
                 }
             }
             default:

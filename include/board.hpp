@@ -5,6 +5,9 @@
 #include "defines.hpp"
 #include "string_manip.hpp"
 
+// third party includes
+#include <spdlog/spdlog.h>
+
 /// stl defines
 #include <array>
 #include <string>
@@ -50,6 +53,10 @@ public:
     }
 
     void add_highlight(Square_t sq);
+
+    bool valid_highlight(Square_t sq);
+
+    void clear_highlights();
 
     friend std::ostream& operator<<(std::ostream& os, const Board& board) {
         for (const auto& row : board.piece_locations_) {
