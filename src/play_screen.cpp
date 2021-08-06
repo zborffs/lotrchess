@@ -55,12 +55,34 @@ void PlayScreen::process_event(sf::Event &event) {
                 sq = static_cast<Square_t>((7 - col) + row * 8);
             }
 
-            if (controller_.valid_highlight(sq)) {
-                controller_.add_highlight(sq); // add a highlight on the square that was clicked
-                board_view_.update_pieces(controller_); // update the pieces
+            if (controller_.piece_selected()) {
+                if (controller_.move_is_legal(sq)) {
+                    spdlog::info("legal move!");
+                    controller_.make_move(sq);
+                    controller_.clear_highlights();
+                    board_view_.update_pieces(controller_);
+                    switch (controller_.result_flag()) {
+                        case NO_RESULT: break;
+                        case DRAW: spdlog::info("Draw"); break;
+                        case STALEMATE: spdlog::info("Stalemate"); break;
+                        case WHITE_VICTORY: spdlog::info("White wins"); context_->music_player_.play_victory_music(WHITE); break;
+                        case BLACK_VICTORY: spdlog::info("Black Wins"); context_->music_player_.play_victory_music(BLACK); break;
+                    }
+                } else if (controller_.valid_highlight(sq)) {
+                    controller_.add_highlight(sq); // add a highlight on the square that was clicked
+                    board_view_.update_pieces(controller_); // update the pieces
+                } else {
+                    controller_.clear_highlights(); // add a highlight on the square that was clicked
+                    board_view_.update_pieces(controller_); // update the pieces
+                }
             } else {
-                controller_.clear_highlights(); // add a highlight on the square that was clicked
-                board_view_.update_pieces(controller_); // update the pieces
+                if (controller_.valid_highlight(sq)) {
+                    controller_.add_highlight(sq); // add a highlight on the square that was clicked
+                    board_view_.update_pieces(controller_); // update the pieces
+                } else {
+                    controller_.clear_highlights(); // add a highlight on the square that was clicked
+                    board_view_.update_pieces(controller_); // update the pieces
+                }
             }
         }
     }

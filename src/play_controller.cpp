@@ -16,26 +16,47 @@ PlayController::PlayController(Color player_color, Engine engine, const std::str
  * @param sq
  */
 void PlayController::add_highlight(Square_t sq) {
-    highlights_.push_back(sq);
+    if (!highlights_.empty() && highlights_.back() == sq) {
+        // if the square that we are seeking to highlight is already highlighted, then move on!
+        return;
+    }
+
+    highlights_.clear(); // clear the highlights
+
+    // TODO: ADD CHECK TO MAKE SURE THAT LEGAL_MOVES IS NON-EMPTY I.E. NO LOSING!
+    for (const auto& m : legal_moves_) {
+        if (m.from_sq == sq) {
+            highlights_.push_back(m.to_sq);
+        }
+    }
+
+    if (!highlights_.empty()) {
+        highlights_.push_back(sq); // always the last one!
+        piece_selected_ = true;
+    } else {
+        piece_selected_ = false;
+    }
 }
 
 /**
  * returns true if the square being selected is "valid"
  * - must be the player's turn to move [done]
  * - must be the player's pieces [done]
- * - must be a player's piece that has a move
  * - must not already be highlighted [done]
  * @param sq the square being checked for highlighting
  * @return true if a valid square to highlight, false otherwise
  */
 bool PlayController::valid_highlight(Square_t sq) {
+    std::lock_guard<std::mutex> guard(mu_board_);
     auto s2m = board_.side_2_move(); // later I will need to mutex access to board, so pull out calls thereto to single lines
     auto piece_type = board_.piece_type(sq);
 
-    if (player_color_ != s2m || piece_type == NO_PIECE || std::find(highlights_.begin(), highlights_.end(), sq) != highlights_.end()) {
-        // if it's not the players move or the square is already in the list, return false
+    if (player_color_ != s2m || piece_type == NO_PIECE) {
+        // if it's not the players move or the square has no piece on it, return false
+        piece_selected_ = false;
         return false;
     }
+
     Color_t selected_color = (piece_type % 2);
     if (selected_color == BLACK && s2m == BLACK) {
         // if the piece is black and it's black's turn (player==black is implicit from previous check), then return true
@@ -45,6 +66,7 @@ bool PlayController::valid_highlight(Square_t sq) {
         return true;
     }
 
+    piece_selected_ = false;
     return false;
 }
 
@@ -52,6 +74,7 @@ bool PlayController::valid_highlight(Square_t sq) {
  * clear the highlight vector (don't highlight anything anymore)
  */
 void PlayController::clear_highlights() {
+    piece_selected_ = false;
     highlights_.clear();
 }
 
@@ -59,8 +82,39 @@ void PlayController::clear_highlights() {
  * generate moves
  */
 void PlayController::gen_moves() {
-    auto hash = std::hash<std::thread::id>()(std::this_thread::get_id());
-//    std::lock_guard<std::mutex> guard(mu_board_);
-//    gen_all_moves(board_);
-    spdlog::info("gen_moves() - thread_id: {}", hash); // std::this_thread::get_id()
+    std::lock_guard<std::mutex> board_guard(mu_board_);
+    std::lock_guard<std::mutex> move_guard(mu_legal_moves_);
+    legal_moves_.clear();
+    legal_moves_.reserve(128);
+
+    gen_all_moves(board_, legal_moves_);
+
+    for (auto itr = legal_moves_.begin(); itr != legal_moves_.end(); ) {
+//        spdlog::info("Board::Key, before make: {}", board_.key());
+        board_.make_move(*itr);
+        if (board_.is_king_checked(!board_.side_2_move())) {
+            // the king of the side that just moved is in check, so this is an illegal move. erase it
+            itr = legal_moves_.erase(itr);
+        } else {
+            ++itr; // don't erase if legal!
+        }
+        board_.unmake_move();
+//        spdlog::info("Board::Key, after make: {}", board_.key());
+    }
+
+    if (legal_moves_.empty()) {
+        // either draw or stalemate
+        if (board_.is_king_checked(board_.side_2_move())) {
+            // mate
+            if (board_.side_2_move() == WHITE) {
+                result_ = BLACK_VICTORY;
+            } else {
+                result_ = WHITE_VICTORY;
+            }
+        } else {
+            result_ = STALEMATE;
+        }
+    } else if (board_.is_draw()) {
+        result_ = DRAW;
+    }
 }

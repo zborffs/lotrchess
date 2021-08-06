@@ -15,6 +15,7 @@
 #include "string_manip.hpp"
 #include "engine_interface.hpp"
 #include "board.hpp"
+#include "move_gen.hpp"
 
 /**
  * keeps track of the current chess position and the graphics (model of the PlayView)
@@ -26,6 +27,8 @@ private:
     /// chess game-state member variables
     Board board_;
     std::mutex mu_board_;
+    bool piece_selected_{false}; // whether the player has clicked on a piece on the board yet!
+    ResultFlag result_{NO_RESULT};
 
     /// non-chess related game-state member variables
     bool as_white_;
@@ -34,6 +37,8 @@ private:
 
     /// move generation member variables
     std::thread move_gen_thread_;
+    std::vector<ChessMove> legal_moves_{};
+    std::mutex mu_legal_moves_;
 
     /// engine communication
     EngineInterface engine_io_;
@@ -51,7 +56,9 @@ public:
         spdlog::info("Destroyed PlayController...");
     }
 
-    [[nodiscard]] inline char piece_at(const Square sq) const {
+    [[nodiscard]] inline char piece_at(const Square sq) {
+        std::lock_guard<std::mutex> move_guard(mu_legal_moves_);
+
         auto piece_type = board_.piece_type(sq);
         char ret;
         switch (piece_type) {
@@ -72,6 +79,10 @@ public:
         return ret;
     }
 
+    [[nodiscard]] inline ResultFlag result_flag() noexcept {
+        return result_;
+    }
+
     [[nodiscard]] inline bool as_white() noexcept {
         return as_white_;
     }
@@ -84,13 +95,53 @@ public:
         return std::find(highlights_.begin(), highlights_.end(), sq) != highlights_.end();
     }
 
-    void rotate_board() {
-        as_white_ = !as_white_;
+    [[nodiscard]] inline bool piece_selected() noexcept {
+        return piece_selected_;
     }
 
-    void switch_sides() {
-        // board.make_move(); //?
-//        side2move_ = side2move_ == WHITE ? side2move_ = BLACK : side2move_ = WHITE;
+    [[nodiscard]] inline bool piece_selected() const noexcept {
+        return piece_selected_;
+    }
+
+    bool move_is_legal(Square_t to_sq) {
+        if (highlights_.empty() || !piece_selected_ || legal_moves_.empty()) {
+            return false;
+        }
+
+        Square_t from_sq = highlights_.back();
+        for (const auto& m : legal_moves_) {
+            if (m.from_sq == from_sq && m.to_sq == to_sq) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void make_move(Square_t to_sq) {
+        std::lock_guard<std::mutex> guard(mu_board_);
+        std::lock_guard<std::mutex> move_guard(mu_legal_moves_);
+
+        Square_t from_sq = highlights_.back();
+        for (auto& m : legal_moves_) {
+            if (m.from_sq == from_sq && m.to_sq == to_sq) {
+                board_.make_move(m);
+                player_color_ = player_color_ == WHITE ? BLACK : WHITE; // remove this line at some point!
+                std::cout << board_ << std::endl;
+                break;
+            }
+        }
+
+        if (board_.side_2_move() == player_color_) {
+            if (move_gen_thread_.joinable()) {
+                move_gen_thread_.join(); // the thread must be joined here!
+            }
+            std::thread t(&PlayController::gen_moves, this);
+            move_gen_thread_ = std::move(t);
+        }
+    }
+
+    void rotate_board() {
+        as_white_ = !as_white_;
     }
 
     void add_highlight(Square_t sq);

@@ -1,6 +1,6 @@
 #include "play_view.hpp"
 
-PlayView::PlayView(const PlayController & board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map) : highlighted_sqs_({}){
+PlayView::PlayView(PlayController & board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map) : highlighted_sqs_({}){
 
     // initialize board texture
     if (!board_texture_.loadFromFile(board_texture_path)) {
@@ -28,7 +28,7 @@ PlayView::PlayView(const PlayController & board, sf::Vector2f board_offset, cons
     update_pieces(board);
 }
 
-void PlayView::update_pieces(const PlayController & board) {
+void PlayView::update_pieces(PlayController & board) {
     // initialize piece_sprites_ (where do which sprites go?)
     piece_sprites_.clear();
     highlighted_sqs_.clear();
@@ -71,7 +71,7 @@ void PlayView::draw(sf::RenderWindow& window) {
 
     // draw highlights on the board
     for (auto& sq : highlighted_sqs_) {
-        sq.rotate(0.9f);
+        sq.rotate(0.5f);
         window.draw(sq);
     }
 
