@@ -1,7 +1,6 @@
 #include "play_screen.hpp"
 
 void PlayScreen::process_event(sf::Event &event) {
-    // poll every event that has occurred
     ImGui::SFML::ProcessEvent(event);
 
     switch (event.type) {
@@ -13,22 +12,27 @@ void PlayScreen::process_event(sf::Event &event) {
     case sf::Event::KeyPressed: {
         if (event.key.code == sf::Keyboard::R) {
             // if the user pressed 'R' then reverse the board
-            spdlog::info("R was pressed");
-            board_.switch_sides(); // update the model
-            board_view_.update_pieces(board_); // update the view's understanding of the model
+            spdlog::info("R was pressed...");
+            controller_.rotate_board(); // update the model
+            board_view_.update_pieces(controller_); // update the view's understanding of the model
         } else if (event.key.code == sf::Keyboard::A) {
+            // if the user pressed "A", then play white startup music
             spdlog::info("A was pressed...");
             context_->music_player_.play_startup_music(WHITE);
         } else if (event.key.code == sf::Keyboard::S) {
+            // if the user pressed "S", then play black startup music
             spdlog::info("S was pressed...");
             context_->music_player_.play_startup_music(BLACK);
         } else if (event.key.code == sf::Keyboard::D) {
+            // if the user pressed "D", then play white victory music
             spdlog::info("D was pressed...");
             context_->music_player_.play_victory_music(WHITE);
         } else if (event.key.code == sf::Keyboard::F) {
+            // if the user pressed "F", then play black victory music
             spdlog::info("F was pressed...");
             context_->music_player_.play_victory_music(BLACK);
         } else if (event.key.code == sf::Keyboard::Escape) {
+            // if the user pressed "Escape", then go to the main menu
             spdlog::info("ESC was pressed...");
             context_->transition_to(new SplashScreen());
         }
@@ -45,23 +49,23 @@ void PlayScreen::process_event(sf::Event &event) {
 
             // to determine what the square was, we need to check if the board is reversed or not on the screen
             Square_t sq {Square::EP_DEFAULT};
-            if (board_.as_white()) {
+            if (controller_.as_white()) {
                 sq = static_cast<Square_t>(col + (7 - row) * 8);
             } else {
                 sq = static_cast<Square_t>((7 - col) + row * 8);
             }
 
-            if (board_.valid_highlight(sq)) {
-                board_.add_highlight(sq); // add a highlight on the square that was clicked
-                board_view_.update_pieces(board_); // update the pieces
+            if (controller_.valid_highlight(sq)) {
+                controller_.add_highlight(sq); // add a highlight on the square that was clicked
+                board_view_.update_pieces(controller_); // update the pieces
             } else {
-                board_.clear_highlights(); // add a highlight on the square that was clicked
-                board_view_.update_pieces(board_); // update the pieces
+                controller_.clear_highlights(); // add a highlight on the square that was clicked
+                board_view_.update_pieces(controller_); // update the pieces
             }
         }
     }
     default:
-        spdlog::trace("Unhanded event type in PlayScreen");
+        spdlog::trace("Unhanded event type in PlayScreen...");
     }
 }
 void PlayScreen::draw(sf::RenderWindow &window) {

@@ -9,13 +9,14 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
+#include <spdlog/spdlog.h>
 
 /// stl includes
 #include <array>
 #include <memory>
-#include <spdlog/spdlog.h>
 #include <string>
 #include <unordered_map>
+#include <thread>
 
 /// project includes
 #include "defines.hpp"
@@ -59,6 +60,8 @@ private:
     sf::RenderWindow window_; // the window to which the game is rendering
     sf::Clock delta_clock_; // keeps track of difference between renders
     MusicPlayer music_player_; // put maybe in parent gamestate class
+    std::thread move_gen_thread_;
+
     // GameState state_; // whats the current gamestate
     // ResourceFactory res_; //
     // SnapShots snap_shots_; // incremental updates to the gamestate needed to achieve the current gamestate

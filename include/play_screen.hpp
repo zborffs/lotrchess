@@ -15,17 +15,16 @@
 #include "splash_screen.hpp"
 
 class PlayScreen : public Screen {
-    const sf::Vector2f board_offset{50., 75.};
-    PlayController board_{};
-    PlayView board_view_{board_, board_offset, BOARD_TEXTURE_PATH, ONE_RING_TEXTURE_PATH, PIECE_TEXTURE_PATH_MAP};
+    PlayController controller_;
+    PlayView board_view_; //{controller_, sf::Vector2f{50., 75.}, BOARD_TEXTURE_PATH, ONE_RING_TEXTURE_PATH, PIECE_TEXTURE_PATH_MAP};
 
 public:
-    explicit PlayScreen() {
-        spdlog::info("Created PlayScreen");
+  explicit PlayScreen(Color player_color, Engine engine) : controller_(player_color, engine), board_view_(controller_, sf::Vector2f{50., 75.}, BOARD_TEXTURE_PATH, ONE_RING_TEXTURE_PATH, PIECE_TEXTURE_PATH_MAP) {
+        spdlog::info("Created PlayScreen...");
     }
 
     ~PlayScreen() {
-        spdlog::info("Destroyed PlayScreen");
+        spdlog::info("Destroyed PlayScreen...");
     }
 
     void process_event(sf::Event& event) override;

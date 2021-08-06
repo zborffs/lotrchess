@@ -1,11 +1,16 @@
 #ifndef LOTRCHESS_BATTLE_SETUP_VIEW_HPP
 #define LOTRCHESS_BATTLE_SETUP_VIEW_HPP
 
+/// third party includes
+#include <SFML/Graphics.hpp>
+
+/// stl includes
+#include <array>
+
+/// lotrchess includes
 #include "battle_setup_controller.hpp"
 #include "extern.hpp"
 #include "toggle_button.hpp"
-#include <SFML/Graphics.hpp>
-#include <array>
 
 /**
  * The "View" (in context of MVC) for the Battle Setup Screen
@@ -16,7 +21,7 @@
  */
 class BattleSetupView {
     const sf::Vector2f bg_offset_{10., 10.};
-    const std::array<std::string, 2> option_string_{"Color", "Strength"};
+    const std::array<std::string, 2> option_string_{"Color", "Difficulty"};
     sf::Texture bg_texture_;
     sf::Sprite bg_;
     sf::Font font_{};

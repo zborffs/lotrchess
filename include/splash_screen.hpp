@@ -11,7 +11,7 @@
 #include <spdlog/spdlog.h>
 
 class SplashScreen : public Screen {
-  SplashController dialog_;
+    SplashController dialog_;
     SplashView dialog_view_;
 
 public:

@@ -24,7 +24,7 @@ LOTRChess::LOTRChess(std::unique_ptr<Screen> init_mode)
  */
 LOTRChess::~LOTRChess() {
     ImGui::SFML::Shutdown(); // shut everything down
-    spdlog::info("Destroyed LOTRChess");
+    spdlog::info("Destroyed LOTRChess...");
 }
 
 /**

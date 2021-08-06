@@ -17,7 +17,7 @@ void BattleSetupScreen::process_event(sf::Event& event) {
         break;
     }
     default:
-      spdlog::trace("Unhandled case in SplashScreen...");
+        spdlog::trace("Unhandled case in SplashScreen...");
     }
 }
 void BattleSetupScreen::draw(sf::RenderWindow& window) {

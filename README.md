@@ -31,5 +31,10 @@ Idea 2:
 - All concrete controllers inherit from the Controller class
 - Generic Controller has some functions (template or strategy visitor?) for saving the state to a json file with a timestamp
 
-Idea 3:
+Idea 3: -> not worth it.
 - Screen class also behaves like template by implementing skeleton of both the state handlers so we don't repeat shit
+
+Three threads:
+1. graphics [Done] -> main thread
+2. move generation -> todo
+3. engine communication

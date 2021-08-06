@@ -1,6 +1,6 @@
 #include "splash_screen.hpp"
 
-void SplashScreen::process_event(sf::Event &event) {
+void SplashScreen::process_event(sf::Event& event) {
     ImGui::SFML::ProcessEvent(event);
 
     switch (event.type) {

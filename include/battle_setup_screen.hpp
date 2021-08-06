@@ -12,11 +12,11 @@ class BattleSetupScreen : public Screen {
 
 public:
     explicit BattleSetupScreen() {
-        spdlog::info("Created BattleSetupScreen");
+        spdlog::info("Created BattleSetupScreen...");
     }
 
     ~BattleSetupScreen() {
-        spdlog::info("Destroyed BattleSetupScreen");
+        spdlog::info("Destroyed BattleSetupScreen...");
     }
 
     void process_event(sf::Event& event) override;

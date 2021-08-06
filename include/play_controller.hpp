@@ -1,17 +1,19 @@
 #ifndef LOTRCHESS_PLAY_CONTROLLER_HPP
 #define LOTRCHESS_PLAY_CONTROLLER_HPP
 
-/// lotrchess defines
-#include "defines.hpp"
-#include "string_manip.hpp"
-
-// third party includes
+/// third party includes
 #include <spdlog/spdlog.h>
 
 /// stl defines
 #include <array>
 #include <string>
 #include <iostream>
+#include <thread>
+
+/// lotrchess defines
+#include "defines.hpp"
+#include "string_manip.hpp"
+#include "engine_interface.hpp"
 
 /**
  * keeps track of the current chess position and the graphics (model of the PlayView)
@@ -20,20 +22,49 @@
  */
 class PlayController {
 private:
+    /// game state member variables
     std::array<std::array<char, 8>, 8> piece_locations_{}; // a1 = [0][0], a8 = [0][7]
-    Color side_2_move_;
-    bool as_white_ {true};
+    Color side2move_;
+    bool as_white_;
+    Color player_color_;
     std::vector<Square_t> highlights_;
 
+    /// move generation member variables
+    std::thread move_gen_thread_;
+    std::unordered_map<Square_t, std::vector<Square_t>> legal_move_map_;
+    std::mutex mu_legal_move_map_;
+    bool stop_gen_move_{false};
+    std::mutex mu_stop_gen_move_;
+    void gen_moves();
+    bool check_stop_gen_move() {
+        std::lock_guard<std::mutex> guard(mu_stop_gen_move_);
+        return stop_gen_move_;
+    }
+    void stop_move_gen() {
+        std::lock_guard<std::mutex> guard(mu_stop_gen_move_);
+        stop_gen_move_ = true;
+    }
+
+    /// engine communication
+    EngineInterface engine_io_;
+
 public:
-  PlayController(const std::string& fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w");
+    explicit PlayController(Color player_color, Engine engine, const std::string& fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w");
+
+    ~PlayController() {
+        stop_move_gen();
+        if (move_gen_thread_.joinable()) {
+            move_gen_thread_.join();
+        }
+        spdlog::info("Destroying PlayController...");
+    }
 
     [[nodiscard]] inline char piece_at(const Square sq) const {
         return piece_locations_[sq / 8][sq % 8];
     }
 
     [[nodiscard]] inline Color side_2_move() const noexcept {
-        return side_2_move_;
+        return side2move_;
     }
 
     [[nodiscard]] inline bool as_white() noexcept {
@@ -48,8 +79,14 @@ public:
         return std::find(highlights_.begin(), highlights_.end(), sq) != highlights_.end();
     }
 
-    void switch_sides() {
+    void rotate_board() {
         as_white_ = !as_white_;
+    }
+
+    void switch_sides() {
+        side2move_ = side2move_ == WHITE ? side2move_ = BLACK : side2move_ = WHITE;
+//        std::thread t(&PlayController::gen_moves, this);
+//        move_gen_thread_ = std::move(t);
     }
 
     void add_highlight(Square_t sq);
@@ -66,7 +103,7 @@ public:
             os << std::endl;
         }
 
-        if (board.side_2_move_ == Color::WHITE) {
+        if (board.side2move_ == Color::WHITE) {
             os << "White's Move\n";
         } else {
             os << "Black's Move\n";
