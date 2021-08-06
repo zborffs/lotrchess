@@ -25,11 +25,11 @@ private:
     }
 
     void engine_comms_loop() {
-        auto hash = std::hash<std::thread::id>()(std::this_thread::get_id());
-        for (int i = 0; i < 2 && !check_quit(); ++i) {
-            spdlog::info("engine_comms_loop() - thread_id: {}, i: {}", hash, i);
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
+//        auto hash = std::hash<std::thread::id>()(std::this_thread::get_id());
+//        for (int i = 0; i < 2 && !check_quit(); ++i) {
+//            spdlog::info("engine_comms_loop() - thread_id: {}, i: {}", hash, i);
+//            std::this_thread::sleep_for(std::chrono::seconds(1));
+//        }
     }
 
     void quit() {

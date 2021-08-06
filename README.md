@@ -1,5 +1,12 @@
 # Lord of the Rings: Chess
 
+Move Generation Plan:
+- convert all the old logic in PlayController for storing and managing the position information into logic compatible 
+with the board class.
+- Have the other thread get a list of ChessMoves from the move_gen functions by passing in the Board object (will 
+require synchronization)
+- delete things we don't need from the board class
+
 ## TODO:
 - board adapter to interface with prometheus board to generate moves -> need chessmove and probably a lot from defines too
 - widget classes:
@@ -38,3 +45,9 @@ Three threads:
 1. graphics [Done] -> main thread
 2. move generation -> todo
 3. engine communication
+
+
+too many files and threads running around!
+- need to simplify things
+
+ 
