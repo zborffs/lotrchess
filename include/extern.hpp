@@ -28,6 +28,8 @@ extern const std::string FONT_PATH;
 extern const std::string BOARD_TEXTURE_PATH;
 extern const std::string ONE_RING_TEXTURE_PATH;
 extern const std::unordered_map<char, std::string> PIECE_TEXTURE_PATH_MAP;
+extern const std::string WHITE_VICTORY_TEXTURE;
+extern const std::string BLACK_VICTORY_TEXTURE;
 
 /// color constants (color scheme)
 extern const sf::Color DEFAULT_FONT_COLOR;

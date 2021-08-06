@@ -28,6 +28,11 @@ private:
     std::unordered_map<char, sf::Texture> piece_texture_map_; // texture for each type of piece
     std::vector<sf::Sprite> piece_sprites_; // pieces on the board
     std::vector<sf::Sprite> highlighted_sqs_; // highlighted squares
+    sf::Texture white_victory_texture_;
+    sf::Sprite white_victory_;
+    sf::Texture black_victory_texture_;
+    sf::Sprite black_victory_;
+    ResultFlag result_;
 
 public:
     PlayView(PlayController &board, sf::Vector2f board_offset, const std::string &board_texture_path,

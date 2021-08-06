@@ -1,6 +1,6 @@
 #include "play_view.hpp"
 
-PlayView::PlayView(PlayController & board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map) : highlighted_sqs_({}){
+PlayView::PlayView(PlayController& board, sf::Vector2f board_offset, const std::string& board_texture_path, const std::string& one_ring_path, const std::unordered_map<char, std::string>& texture_path_map) : highlighted_sqs_({}){
 
     // initialize board texture
     if (!board_texture_.loadFromFile(board_texture_path)) {
@@ -24,6 +24,18 @@ PlayView::PlayView(PlayController & board, sf::Vector2f board_offset, const std:
         }
         piece_texture_map_[kv_pair.first] = texture;
     }
+
+    if (!white_victory_texture_.loadFromFile(WHITE_VICTORY_TEXTURE)) {
+        spdlog::error("Failed to load the white victory texture");
+    }
+    white_victory_.setTexture(white_victory_texture_);
+    white_victory_.setPosition(board_offset);
+
+    if (!black_victory_texture_.loadFromFile(BLACK_VICTORY_TEXTURE)) {
+        spdlog::error("Failed to load the black victory texture");
+    }
+    black_victory_.setTexture(black_victory_texture_);
+    black_victory_.setPosition(board_offset);
 
     update_pieces(board);
 }
@@ -64,6 +76,9 @@ void PlayView::update_pieces(PlayController & board) {
             }
         }
     }
+
+    result_ = board.result_flag();
+
 }
 
 void PlayView::draw(sf::RenderWindow& window) {
@@ -78,6 +93,21 @@ void PlayView::draw(sf::RenderWindow& window) {
     // draw the pieces on the board
     for (const auto& sprite : piece_sprites_) {
         window.draw(sprite);
+    }
+
+    switch (result_) {
+        case NO_RESULT:
+            break;
+        case DRAW:
+            break;
+        case STALEMATE:
+            break;
+        case WHITE_VICTORY:
+            window.draw(white_victory_);
+            break;
+        case BLACK_VICTORY:
+            window.draw(black_victory_);
+            break;
     }
 }
 
