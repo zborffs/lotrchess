@@ -49,6 +49,7 @@ const std::unordered_map<char, std::string> PIECE_TEXTURE_PATH_MAP{{
 const std::string WHITE_VICTORY_TEXTURE{"../../res/img/white_victory.jpg"};
 const std::string BLACK_VICTORY_TEXTURE{"../../res/img/black_victory.jpg"};
 
+
 /// colors (color scheme)
 const sf::Color DEFAULT_FONT_COLOR{255, 255, 255, 255}; // solid white
 const sf::Color SELECTED_FONT_COLOR{255, 215, 0, 255}; // LOTR gold

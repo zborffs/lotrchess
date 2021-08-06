@@ -73,7 +73,7 @@ enum SplashSelector {
  *   - Black: Witch King of Angmar
  */
 enum Engine {
-    Faile = 0,
+    CPW = 0, // going to need another one
     Senpai = 1,
     Prometheus = 2,
     Stockfish = 3

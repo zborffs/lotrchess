@@ -7,15 +7,32 @@
 /// stl defines
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 /// lotrchess defines
 #include "defines.hpp"
+#include "extern.hpp"
+#include "subprocess.hpp"
+
+namespace sp = subprocess;
 
 class EngineInterface {
 private:
+    /// engine enum to path map
+    std::unordered_map<Engine, std::string> ENGINE_PATH_MAP{{ // should be const but making it const messes things up
+        {CPW, "../../res/engine/senpai"},
+        {Senpai, "../../res/engine/senpai"},
+        {Prometheus, "../../res/engine/senpai"},
+        {Stockfish, "../../res/engine/senpai"}
+    }};
+
     Engine engine_;
     std::thread engine_thread_;
+
+    /// engine data
     std::string best_move_;
+
+    /// whether or not to quit (quit signal)
     bool quit_{false};
     std::mutex mu_quit_;
 
@@ -25,11 +42,19 @@ private:
     }
 
     void engine_comms_loop() {
-//        auto hash = std::hash<std::thread::id>()(std::this_thread::get_id());
-//        for (int i = 0; i < 2 && !check_quit(); ++i) {
-//            spdlog::info("engine_comms_loop() - thread_id: {}, i: {}", hash, i);
-//            std::this_thread::sleep_for(std::chrono::seconds(1));
-//        }
+        auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
+
+        /// setup interprocess communication with engine over pipes
+        auto path_to_engine = ENGINE_PATH_MAP[engine_]; // get the path to the engine executable
+        auto p = sp::Popen({path_to_engine}, sp::input{sp::PIPE}, sp::output{sp::PIPE}); // create a subprocess from the executable
+
+        /// initiate UCI protocol
+        auto msg = "uci"; // thing we want to send
+        p.send(msg, strlen(msg)); // send it
+        auto res = p.communicate(); // grab the result
+
+        spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, msg);
+        spdlog::info("Thread {} received: \"{}\"", thread_id_hash, res.first.buf.data());
     }
 
     void quit() {
@@ -49,7 +74,6 @@ public:
         }
         spdlog::info("Destroyed EngineInterface...");
     }
-
 
 
     [[nodiscard]] inline std::string best_move() noexcept {

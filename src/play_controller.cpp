@@ -1,7 +1,6 @@
 #include "play_controller.hpp"
 
 PlayController::PlayController(Color player_color, Engine engine, const std::string& fen) : board_(fen), as_white_(player_color != BLACK), player_color_(player_color), highlights_({}), engine_io_(engine) {
-
     /// move generation thread initialization
     if (board_.side_2_move() == player_color_) {
         std::thread t(&PlayController::gen_moves, this);
@@ -23,7 +22,6 @@ void PlayController::add_highlight(Square_t sq) {
 
     highlights_.clear(); // clear the highlights
 
-    // TODO: ADD CHECK TO MAKE SURE THAT LEGAL_MOVES IS NON-EMPTY I.E. NO LOSING!
     for (const auto& m : legal_moves_) {
         if (m.from_sq == sq) {
             highlights_.push_back(m.to_sq);
