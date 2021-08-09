@@ -1,4 +1,5 @@
 # Lord of the Rings: Chess
+#### dependencies
 
 
 ## TODO:
@@ -15,7 +16,7 @@
 - Flyweight pattern? // this is already sort of done (or SFML gives us the option to do this or does it itself)
 - Replay games
 - multithreading for reading from engine + updating things on screen etc. etc.
-
+- promoting pick piece
 
 Idea:
 - Screen contains a generic pointer to a View

@@ -969,6 +969,12 @@ void Board::unmake_move() noexcept {
  * @param fen the given fen string
  */
 void Board::parse_fen(const std::string &fen) {
+    if (fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
+        uci_pos_str_ = "startpos";
+    } else {
+        uci_pos_str_ = fen;
+    }
+
     std::vector<std::string> v = split(fen);
     parse_fen(v.begin(), v.end());
 }
@@ -1219,4 +1225,26 @@ void Board::init_pos_keys() noexcept {
     key_ ^= SIDE_2_MOVE_KEYS[side_2_move_];
     key_ ^= CASTLE_PERMISSION_KEYS[castle_perm_];
     key_ ^= EN_PASSANT_KEYS[ep_sq_];
+}
+
+std::string Board::uci_pos_str() {
+    std::string ret{uci_pos_str_ + " moves "};
+
+    if (move_history_.size() >= 1) {
+        std::vector<MoveHistoryEntry> move_history_copy;
+        move_history_copy.reserve(move_history_.size() - 1);
+        ret += move_.to_string() + " ";
+        while (move_history_.size() > 1) {
+            auto move_history_entry = move_history_.top();
+            move_history_copy.push_back(move_history_entry);
+            ret += std::get<MoveHistoryIndex::CHESSMOVE>(move_history_entry).to_string() + " ";
+            move_history_.pop();
+        }
+
+        for (int k = static_cast<int>(move_history_copy.size()) - 1; k >= 0; k--) {
+            move_history_.push(move_history_copy[static_cast<unsigned long>(k)]);
+        }
+    }
+
+    return ret;
 }

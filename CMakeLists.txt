@@ -24,7 +24,7 @@ include(cmake/Cache.cmake)
 
 # standard compiler warnings
 include(cmake/CompilerWarnings.cmake)
-#set_project_warnings(project_warnings)
+set_project_warnings(project_warnings)
 
 # sanitizer options if supported by compiler
 include(cmake/Sanitizers.cmake)
@@ -57,7 +57,11 @@ if(ENABLE_PCH)
 endif()
 
 # Set up some extra Conan dependencies based on our needs before loading Conan
-set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} imgui-sfml/2.1@bincrafters/stable)
+set(CONAN_EXTRA_REQUIRES ${CONAN_EXTRA_REQUIRES} imgui-sfml/2.1@bincrafters/stable cmake_findboost_modular/1.69.0@bincrafters/stable boost/1.73.0) # graphics
+#cmake_findboost_modular/1.69.0@bincrafters/stable
+#boost/1.73.0
+
+find_package(Boost 1.73.0 COMPONENTS program_options REQUIRED)
 
 # set(CONAN_EXTRA_OPTIONS ${CONAN_EXTRA_OPTIONS} sfml:shared=False sfml:graphics=True sfml:audio=False
 # sfml:window=True libalsa:disable_python=True)

@@ -14,10 +14,10 @@
 #include <unordered_map>
 
 /// Window constants
-const unsigned int WINDOW_WIDTH = 1280;
-const unsigned int WINDOW_HEIGHT = 1080;
+const unsigned int WINDOW_WIDTH = 1280; // 1280
+const unsigned int WINDOW_HEIGHT = 1080; // 1080
 const unsigned int FPS_LIMIT = 30;
-const float SCALE_FACTOR = 2.0;
+const float SCALE_FACTOR = 2.0; // 2.0
 const float FONT_SCALE_FACTOR = 1.0;
 const std::string WINDOW_TITLE{"Lord of the Rings: Chess"};
 

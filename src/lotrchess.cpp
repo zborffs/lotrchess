@@ -16,7 +16,7 @@ LOTRChess::LOTRChess(std::unique_ptr<Screen> init_mode)
     ImGui::GetStyle().ScaleAllSizes(SCALE_FACTOR); // scale objects
     ImGui::GetIO().FontGlobalScale = FONT_SCALE_FACTOR; // scale fonts
 
-    spdlog::info("Created LOTRChess object..."); // log creation
+    spdlog::info("Created LOTRChess..."); // log creation
 }
 
 /**

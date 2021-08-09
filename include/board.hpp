@@ -36,6 +36,7 @@ class Board {
     Color_t side_2_move_; // whose turn it is
     Depth current_ply_; // the current depth
     ChessMove move_; // move that was just made to achieve the current position
+    std::string uci_pos_str_;
 
     using MoveHistoryEntry = std::tuple<ChessMove, PositionKey, CastleRights_t, Square_t, Depth>;
     using MoveHistory = std::stack<MoveHistoryEntry>;
@@ -88,14 +89,12 @@ public:
     bool is_draw() const noexcept;
     bool is_king_checked(Color_t color) noexcept;
     bool is_king_checked(Color_t color) const noexcept;
+    [[nodiscard]] std::string uci_pos_str();
 
     /// Setters
     void store_current_state(const ChessMove &new_move) noexcept;
-
     void reset_fif_move_counter() noexcept;
-
     void set_ep_sq(const Square_t new_ep_sq) noexcept;
-
     void swap_sides() noexcept;
 
     ChessMove restore_last_state() noexcept;
