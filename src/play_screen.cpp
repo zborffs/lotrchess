@@ -57,7 +57,6 @@ void PlayScreen::process_event(sf::Event &event) {
 
             if (controller_.piece_selected()) {
                 if (controller_.move_is_legal(sq)) {
-                    spdlog::info("legal move!");
                     controller_.make_move(sq);
                     controller_.clear_highlights();
                     board_view_.update_pieces(controller_);

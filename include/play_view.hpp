@@ -6,6 +6,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <spdlog/spdlog.h>
 
 /// stl includes
@@ -32,7 +34,15 @@ private:
     sf::Sprite white_victory_;
     sf::Texture black_victory_texture_;
     sf::Sprite black_victory_;
+    sf::Texture draw_result_texture_; // draw and stalemate texture
+    sf::Sprite draw_result_; // draw or stalemate result sprite
     ResultFlag result_;
+
+    sf::Text result_text_;
+    sf::Font font_{};
+    const unsigned int small_font_size{42};
+    const unsigned int medium_font_size{43};
+    const unsigned int large_font_size{72};
 
 public:
     PlayView(PlayController &board, sf::Vector2f board_offset, const std::string &board_texture_path,

@@ -37,6 +37,20 @@ PlayView::PlayView(PlayController& board, sf::Vector2f board_offset, const std::
     black_victory_.setTexture(black_victory_texture_);
     black_victory_.setPosition(board_offset);
 
+    if (!draw_result_texture_.loadFromFile(DRAW_RESULT_TEXTURE)) {
+        spdlog::error("Failed to load the draw result texture");
+    }
+    draw_result_.setTexture(draw_result_texture_);
+    draw_result_.setPosition(board_offset);
+
+    // configure the font
+    font_.loadFromFile(FONT_PATH);
+
+    // configure the title
+    result_text_.setFont(font_);
+    result_text_.setCharacterSize(large_font_size); // arbitrary
+    result_text_.setPosition(board_offset);
+
     update_pieces(board);
 }
 
@@ -78,7 +92,6 @@ void PlayView::update_pieces(PlayController & board) {
     }
 
     result_ = board.result_flag();
-
 }
 
 void PlayView::draw(sf::RenderWindow& window) {
@@ -99,16 +112,28 @@ void PlayView::draw(sf::RenderWindow& window) {
         case NO_RESULT:
             break;
         case DRAW:
+            window.draw(draw_result_);
+            result_text_.setString("Draw");
+            window.draw(result_text_);
             break;
         case STALEMATE:
+            window.draw(draw_result_);
+            result_text_.setString("Stalemate");
+            window.draw(result_text_);
             break;
         case WHITE_VICTORY:
             window.draw(white_victory_);
+            result_text_.setString("White Wins");
+            window.draw(result_text_);
             break;
         case BLACK_VICTORY:
             window.draw(black_victory_);
+            result_text_.setString("Black Wins");
+            window.draw(result_text_);
             break;
     }
+
+
 }
 
 /**

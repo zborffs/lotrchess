@@ -48,6 +48,7 @@ const std::unordered_map<char, std::string> PIECE_TEXTURE_PATH_MAP{{
                                                                    }};
 const std::string WHITE_VICTORY_TEXTURE{"../../res/img/white_victory.jpg"};
 const std::string BLACK_VICTORY_TEXTURE{"../../res/img/black_victory.jpg"};
+const std::string DRAW_RESULT_TEXTURE{"../../res/img/draw_stalemate.jpg"};
 
 
 /// colors (color scheme)

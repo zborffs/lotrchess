@@ -1,18 +1,18 @@
 # Lord of the Rings: Chess
 #### dependencies
-
+boost.process
+sfml
+imgui
+spdlog
 
 ## TODO:
 - widget classes:
-  - Title class -> figures out where within the page to go by itself, included as an object by all the viewers
   - Mute Button Class -> same deal with figuring out where to go, included as an object
   - Options Class -> Same deal
   - Back Button Class
-  - Toggle Button: 
+  - Toggle Button:
 - Save / serialize game state -> for example whose turn it is and the current position
 - read pgn or output from c-chess-cli to playback in real-time what was happening
-- inheritance between view clases?
-- inheritance between dialog clases?
 - Flyweight pattern? // this is already sort of done (or SFML gives us the option to do this or does it itself)
 - Replay games
 - multithreading for reading from engine + updating things on screen etc. etc.
@@ -36,8 +36,7 @@ Idea 3: -> not worth it.
 - Screen class also behaves like template by implementing skeleton of both the state handlers so we don't repeat shit
 
 Three threads:
-3. engine communication
-
+3. engine communication [todo]
 
 too many files and threads running around!
 - need to simplify things
