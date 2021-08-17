@@ -21,6 +21,8 @@
  * keeps track of the current chess position and the graphics (model of the PlayView)
  * - where pieces are
  * - whose turn it is
+ * - etc.
+ * makes requests to EngineInterface class to get UCI engine's moves
  */
 class PlayController {
 private:
@@ -34,6 +36,8 @@ private:
     bool as_white_;
     Color player_color_;
     std::vector<Square_t> highlights_;
+    bool player_promoting_{false}; // whether or not the player is trying to promote a piece
+    std::vector<ChessMove> promoting_moves_{};
 
     /// move generation member variables
     std::thread move_gen_thread_;
@@ -77,6 +81,10 @@ public:
         default: ret = ' ';
         }
         return ret;
+    }
+
+    [[nodiscard]] inline bool player_promoting() noexcept {
+        return player_promoting_;
     }
 
     [[nodiscard]] inline ResultFlag result_flag() noexcept {
@@ -124,12 +132,25 @@ public:
         Square_t from_sq = highlights_.back();
         for (auto& m : legal_moves_) {
             if (m.from_sq == from_sq && m.to_sq == to_sq) {
+                if (m.promoted() != NO_PIECE) {
+                    // the move in question is a promotion.
+                    spdlog::info("Player is trying to promote a pawn");
+//                    promoting_moves_.push_back(m);
+//                    continue;
+                }
+
                 board_.make_move(m);
 //                player_color_ = player_color_ == WHITE ? BLACK : WHITE; // remove this line at some point!
                 std::cout << board_ << std::endl;
                 break;
             }
         }
+
+//        if (!promoting_moves_.empty()) {
+//            player_promoting_ = true; // this will be repeated?
+//            return; // don't update anything, because the board was never updated!
+//        }
+
 
         engine_io_.update_position(board_);
 

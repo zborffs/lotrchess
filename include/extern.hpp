@@ -22,7 +22,7 @@ extern const float FONT_SCALE_FACTOR;
 extern const std::string WINDOW_TITLE;
 
 /// resource paths (relative to cmake)
-extern const std::array<std::string, 4> MUSIC_PATHS;
+extern const std::array<std::string, 5> MUSIC_PATHS;
 extern const std::string SPLASH_BG_PATH;
 extern const std::string FONT_PATH;
 extern const std::string BOARD_TEXTURE_PATH;

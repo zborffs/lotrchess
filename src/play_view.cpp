@@ -92,6 +92,10 @@ void PlayView::update_pieces(PlayController & board) {
     }
 
     result_ = board.result_flag();
+
+    if (board.player_promoting()) {
+        spdlog::info("BoardView knows to draw promotion!");
+    }
 }
 
 void PlayView::draw(sf::RenderWindow& window) {

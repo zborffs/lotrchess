@@ -1,16 +1,46 @@
 # Lord of the Rings: Chess
+- this is a LOTR-themed chess game written in C++ using SFML+ImGui
+- check out a demo [here](https://zborffs.github.io/SFML-ImGui-Chess-UI)
+
+## Art Contributions
+- Huge thanks to Erica Hannania for making the board and piece sprites
+- Huge thanks to [Darek Zabrocki](https://www.deviantart.com/darekzabrocki/about) for making the white and black victory cards 
 
 ## Download and Install
+- the only way of installing the app at the moment is to build it from source:
 
+```shell
+git clone https://github.com/zborffs/lotrchess
+mkdir -p lotrchess/build
+pushd lotrchess/build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+popd
+```
 
-#### Source Dependencies
-boost.process
-sfml
-imgui
-spdlog
+### User Prerequisites
+Running the preceding commands will download and build the software. Make sure you have the following dependencies 
+before attempting to install:
+1. CMake (3.15 or later)
+2. conan
 
-## TODO:
-- automatic update of chess board - not based on processing inputs
+### Source Dependencies
+The project uses conan to handle all the source dependencies. The code relies on the following libraries:
+  1. boost.process ~ talking to the uci engine
+  2. SFML+ImGui ~ Graphics + UI components
+  3. spdlog ~ logging back to the programmer
+
+## Todo List:
+- pick promoting piece (user) -> another screen + event processing without losing gamestate for Play?
+  - easiest way of doing this would be to simply add another variable to the playscreen class or something, determining
+    whether or not we are in the promotion pick state. If we are not, then act as usual, but if we are, then depict 
+    another screen and have new update actions?
+  - This seems very hacky, especially considering we already have a mechanism for doing this (state update). But the 
+    problem is that we destroy the current game state whenever we change states. But we can't do that in this 
+    circumstance, because the PlayScreen game state has important information about the board.
+- Refactor to clean up code
+- Refactor to simplify interface boundary between engine_io and controller
+- maybe extract some functionality out of the playcontroller?
 - widget classes:
   - Mute Button Class -> same deal with figuring out where to go, included as an object
   - Options Class -> Same deal
@@ -18,9 +48,8 @@ spdlog
   - Toggle Button:
 - Save / serialize game state -> for example whose turn it is and the current position
 - read pgn or output from c-chess-cli to playback in real-time what was happening
-- Flyweight pattern? // this is already sort of done (or SFML gives us the option to do this or does it itself)
 - Replay games
-- promoting pick piece
+
 
 Idea:
 - Screen contains a generic pointer to a View
@@ -35,8 +64,3 @@ Idea 2:
 - Screen contains a generic pointer to a Controller class
 - All concrete controllers inherit from the Controller class
 - Generic Controller has some functions (template or strategy visitor?) for saving the state to a json file with a timestamp
-
-too many files and threads running around!
-- need to simplify things
-
- 

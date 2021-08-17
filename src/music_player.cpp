@@ -1,10 +1,13 @@
 #include "music_player.hpp"
-MusicPlayer::MusicPlayer(const std::array<std::string, 4>& music_paths) {
+MusicPlayer::MusicPlayer(const std::array<std::string, 5>& music_paths) {
     startup_music_[0].openFromFile(music_paths[0]); // white startup
     victory_music_[0].openFromFile(music_paths[1]); // white victory
 
     startup_music_[1].openFromFile(music_paths[2]); // black startup
     victory_music_[1].openFromFile(music_paths[3]); // black victory
+
+    piece_moved_sfx_.openFromFile(music_paths[4]); // piece moved sound effect
+    piece_moved_sfx_.setVolume(0.5);
 }
 
 void MusicPlayer::stop_all_music() {
@@ -35,4 +38,14 @@ void MusicPlayer::play_startup_music(Color color) {
     auto offset = startup_music_[color].getPlayingOffset();
     startup_music_[color].play();
     startup_music_[color].setPlayingOffset(offset);
+}
+
+void MusicPlayer::play_piece_moved_sfx() {
+//    stop_all_music();
+
+    spdlog::info("Playing piece moved sound effect...");
+
+    auto offset = piece_moved_sfx_.getPlayingOffset();
+    piece_moved_sfx_.play();
+    piece_moved_sfx_.setPlayingOffset(offset);
 }

@@ -48,6 +48,14 @@ void PlayScreen::process_event(sf::Event &event) {
             if (board_view_.in_board(x, y)) {
                 // if the user pressed on the mouse inside the board's bounding box, then figure out what square was clicked
                 sf::Vector2f board_view_offset = board_view_.board_offset();
+
+                if (controller_.player_promoting()) {
+                    spdlog::info("Screen realizes that the player is trying to promote a pawn");
+//                    board_view_.update_pieces(controller_);
+                    return;
+                }
+
+
                 int col = static_cast<int>((static_cast<float>(x) - board_view_offset.x) / 100);
                 int row = static_cast<int>((static_cast<float>(y) - board_view_offset.y) / 100);
 
@@ -67,6 +75,7 @@ void PlayScreen::process_event(sf::Event &event) {
 
                         switch (controller_.result_flag()) {
                             case NO_RESULT:
+                                context_->music_player_.play_piece_moved_sfx();
                                 break;
                             case DRAW:
                                 spdlog::info("Draw");
@@ -116,9 +125,11 @@ void PlayScreen::update() {
         // check to see whether the controller has a result from the engine_io_ object
         board_view_.update_pieces(controller_); // update the board if there is a result
 
+
         // play the corresponding must / show the corresponding screen to accord with the game result
         switch (controller_.result_flag()) {
             case NO_RESULT:
+                context_->music_player_.play_piece_moved_sfx();
                 break;
             case DRAW:
                 spdlog::info("Draw");

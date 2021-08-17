@@ -22,11 +22,12 @@ const float FONT_SCALE_FACTOR = 1.0;
 const std::string WINDOW_TITLE{"Lord of the Rings: Chess"};
 
 /// resource paths (relative to cmake build)
-const std::array<std::string, 4> MUSIC_PATHS({
+const std::array<std::string, 5> MUSIC_PATHS({
                                                      "../../res/music/white_startup_music.wav",
                                                      "../../res/music/white_victory_music.wav",
                                                      "../../res/music/black_startup_music.wav",
                                                      "../../res/music/black_victory_music.wav",
+                                                     "../../res/sfx/move_sfx.wav",
                                              });
 const std::string FONT_PATH{"../../res/font/lotr_font.ttf"};
 const std::string SPLASH_BG_PATH{"../../res/img/splash_bg.jpg"};
