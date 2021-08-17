@@ -132,12 +132,16 @@ public:
             }
         }
 
+        engine_io_.update_position(board_);
+
         if (board_.side_2_move() == player_color_) {
             if (move_gen_thread_.joinable()) {
                 move_gen_thread_.join(); // the thread must be joined here!
             }
             std::thread t(&PlayController::gen_moves, this);
             move_gen_thread_ = std::move(t);
+        } else {
+
         }
     }
 

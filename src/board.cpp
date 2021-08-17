@@ -1233,17 +1233,20 @@ std::string Board::uci_pos_str() {
     if (move_history_.size() >= 1) {
         std::vector<MoveHistoryEntry> move_history_copy;
         move_history_copy.reserve(move_history_.size() - 1);
-        ret += move_.to_string() + " ";
+
         while (move_history_.size() > 1) {
             auto move_history_entry = move_history_.top();
             move_history_copy.push_back(move_history_entry);
-            ret += std::get<MoveHistoryIndex::CHESSMOVE>(move_history_entry).to_string() + " ";
+//            ret += std::get<MoveHistoryIndex::CHESSMOVE>(move_history_entry).to_string() + " ";
             move_history_.pop();
         }
 
         for (int k = static_cast<int>(move_history_copy.size()) - 1; k >= 0; k--) {
+            ret += std::get<MoveHistoryIndex::CHESSMOVE>(move_history_copy[static_cast<unsigned long>(k)]).to_string() + " ";
             move_history_.push(move_history_copy[static_cast<unsigned long>(k)]);
         }
+
+        ret += move_.to_string() + " ";
     }
 
     return ret;

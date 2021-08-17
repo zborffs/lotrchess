@@ -60,6 +60,7 @@ void PlayScreen::process_event(sf::Event &event) {
                     controller_.make_move(sq);
                     controller_.clear_highlights();
                     board_view_.update_pieces(controller_);
+
                     switch (controller_.result_flag()) {
                         case NO_RESULT: break;
                         case DRAW:

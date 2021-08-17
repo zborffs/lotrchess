@@ -141,8 +141,11 @@ public:
     }
 
     void update_position(Board& board) {
+        auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
+        std::lock_guard<std::mutex> guard(mu_uci_position_command_);
         std::string uci_pos_str = board.uci_pos_str();
         uci_position_command_ = "position " + uci_pos_str;
+        spdlog::info("Thread {} prepping UCI command: {}", thread_id_hash, uci_position_command_);
     }
 
     void quit() {
