@@ -126,7 +126,7 @@ public:
         for (auto& m : legal_moves_) {
             if (m.from_sq == from_sq && m.to_sq == to_sq) {
                 board_.make_move(m);
-                player_color_ = player_color_ == WHITE ? BLACK : WHITE; // remove this line at some point!
+//                player_color_ = player_color_ == WHITE ? BLACK : WHITE; // remove this line at some point!
                 std::cout << board_ << std::endl;
                 break;
             }
@@ -141,7 +141,7 @@ public:
             std::thread t(&PlayController::gen_moves, this);
             move_gen_thread_ = std::move(t);
         } else {
-
+            engine_io_.calculate_best_move();
         }
     }
 
@@ -163,6 +163,8 @@ public:
         }
         return os << "]";
     }
+
+    bool check_result();
 };
 
 #endif // LOTRCHESS_PLAY_CONTROLLER_HPP

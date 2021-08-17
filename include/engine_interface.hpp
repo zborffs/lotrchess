@@ -18,6 +18,11 @@
 
 namespace bp = boost::process;
 
+/**
+ * upon the creation of the PlayController, the EngineInterface is also created, and the engine_comms_loop is entered by
+ * the EngineInterface thread. In the engine interface thread, the engine process is created, and the UCI engine is
+ * initialized to UCI mode and verfied to be ready. Then the thread sleeps until it is being asked the best move.
+ */
 class EngineInterface {
 private:
     /// engine enum to path map
@@ -33,8 +38,13 @@ private:
     std::string uci_position_command_{"position startpos"};
     std::mutex mu_uci_position_command_;
 
+    /// sleep
+    bool sleep_{true};
+    std::mutex mu_sleep_;
+
+
     /// engine data
-    ChessMove best_move_;
+    std::string best_move_;
     std::mutex mu_best_move_;
 
     /// whether or not to quit (quit signal)
@@ -46,6 +56,12 @@ private:
         return quit_;
     }
 
+    bool check_sleep() {
+        std::lock_guard<std::mutex> guard(mu_sleep_);
+        return sleep_;
+    }
+
+
     void engine_comms_loop() {
         /// setup interprocess communication with engine over pipes
         auto path_to_engine = ENGINE_PATH_MAP[engine_]; // get the path to the engine executable
@@ -56,6 +72,24 @@ private:
 
         send_uci_command(c, out_pipe_stream, in_pipe_stream);
         send_isready_command(c, out_pipe_stream, in_pipe_stream);
+
+        while (!check_quit()) {
+            while (!check_quit() && check_sleep()) {
+                // while the engine hasn't been requested to sleep or to quit, then sleep
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+
+            if (check_quit()) {
+                break;
+            }
+
+            send_position_command(c, in_pipe_stream);
+            send_go_command(c, out_pipe_stream, in_pipe_stream);
+
+            std::lock_guard<std::mutex> guard(mu_sleep_);
+            sleep_ = true;
+        }
+
 
         // auto move = send_go_command(c, out_pipe_stream, in_pipe_stream);
         // set_best_move(move); // move_ = transform_string_to_chessmove(move);
@@ -113,6 +147,36 @@ private:
         }
         c.wait();
     }
+
+    void send_position_command(bp::child& c, bp::opstream& in_pipe_stream) {
+        std::lock_guard<std::mutex> guard(mu_uci_position_command_);
+        auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
+        in_pipe_stream << uci_position_command_ << std::endl;
+        spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, uci_position_command_);
+    }
+
+    void send_go_command(bp::child& c, bp::ipstream& out_pipe_stream, bp::opstream& in_pipe_stream) {
+        auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
+        in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
+        spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 5000");
+        std::string line;
+        while (c.running() && !check_quit()) {
+            std::getline(out_pipe_stream, line);
+            spdlog::info("Thread {} received: \"{}\"", thread_id_hash, line);
+            if (line.empty() || (line.size() > 8 && line.substr(0, 8) == "bestmove")) {
+                break;
+            }
+        }
+
+        std::lock_guard<std::mutex> guard(mu_best_move_);
+        if (line.size() >= 9 + 5) {
+            best_move_ = line.substr(9, 5); // allows to capture to-from squares and the promotion piece
+        } else {
+            best_move_ = line.substr(9, 4); // just assume we have room to extract the to-from squares
+        }
+        spdlog::info("Thread {} best move: \"{}\"", thread_id_hash, best_move_);
+    }
+
 public:
     explicit EngineInterface(Engine engine) : engine_(engine), engine_thread_(&EngineInterface::engine_comms_loop, this) {
         spdlog::info("Created EngineInterface...");
@@ -127,7 +191,7 @@ public:
     }
 
 
-    [[nodiscard]] inline ChessMove best_move() noexcept {
+    [[nodiscard]] inline std::string best_move() noexcept {
         std::lock_guard<std::mutex> guard(mu_best_move_);
         return best_move_;
     }
@@ -151,6 +215,18 @@ public:
     void quit() {
         std::lock_guard<std::mutex> guard(mu_quit_);
         quit_ = true;
+    }
+
+    void calculate_best_move() {
+        std::lock_guard<std::mutex> guard(mu_sleep_);
+        sleep_ = false;
+        spdlog::info("sleep_ is false");
+    }
+
+    void reset_best_move() {
+        std::lock_guard<std::mutex> guard(mu_best_move_);
+        best_move_ = "";
+        spdlog::info("best_move reset");
     }
 };
 

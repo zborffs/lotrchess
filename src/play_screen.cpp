@@ -3,6 +3,11 @@
 void PlayScreen::process_event(sf::Event &event) {
     ImGui::SFML::ProcessEvent(event);
 
+    if (controller_.check_result()) {
+        board_view_.update_pieces(controller_);
+
+    }
+
     switch (event.type) {
     case sf::Event::Closed: {
         // if it was a close window event, then close the window
