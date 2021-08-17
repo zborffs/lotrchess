@@ -50,7 +50,6 @@ public:
     explicit PlayController(Color player_color, Engine engine, const std::string& fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     ~PlayController() {
-//        engine_io_.quit(); -> doesn't need to be called, since it's in the destructor
         if (move_gen_thread_.joinable()) {
             move_gen_thread_.join();
         }

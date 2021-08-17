@@ -83,7 +83,7 @@ private:
                 break;
             }
 
-            send_position_command(c, in_pipe_stream);
+            send_position_command(in_pipe_stream);
             send_go_command(c, out_pipe_stream, in_pipe_stream);
 
             std::lock_guard<std::mutex> guard(mu_sleep_);
@@ -148,7 +148,7 @@ private:
         c.wait();
     }
 
-    void send_position_command(bp::child& c, bp::opstream& in_pipe_stream) {
+    void send_position_command(bp::opstream& in_pipe_stream) {
         std::lock_guard<std::mutex> guard(mu_uci_position_command_);
         auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
         in_pipe_stream << uci_position_command_ << std::endl;
@@ -158,7 +158,7 @@ private:
     void send_go_command(bp::child& c, bp::ipstream& out_pipe_stream, bp::opstream& in_pipe_stream) {
         auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
         in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
-        spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 5000");
+        spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 2500");
         std::string line;
         while (c.running() && !check_quit()) {
             std::getline(out_pipe_stream, line);

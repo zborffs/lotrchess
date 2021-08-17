@@ -121,7 +121,7 @@ void PlayController::gen_moves() {
 }
 
 bool PlayController::check_result() {
-    auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
+//    auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
 //    spdlog::info("Thread {}: checking result!", thread_id_hash);
     std::string move = engine_io_.best_move();
 
@@ -153,7 +153,7 @@ bool PlayController::check_result() {
         }
 
         /// Transform input "to square" string into Square_t primitive
-        file = move[2] - 'a';
+        file = static_cast<File_t>(move[2] - 'a');
         rank = static_cast<Rank_t>(move[3] - '1');
         to_sq = file + 8 * rank;
 

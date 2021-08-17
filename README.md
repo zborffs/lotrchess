@@ -1,11 +1,16 @@
 # Lord of the Rings: Chess
-#### dependencies
+
+## Download and Install
+
+
+#### Source Dependencies
 boost.process
 sfml
 imgui
 spdlog
 
 ## TODO:
+- automatic update of chess board - not based on processing inputs
 - widget classes:
   - Mute Button Class -> same deal with figuring out where to go, included as an object
   - Options Class -> Same deal
@@ -15,7 +20,6 @@ spdlog
 - read pgn or output from c-chess-cli to playback in real-time what was happening
 - Flyweight pattern? // this is already sort of done (or SFML gives us the option to do this or does it itself)
 - Replay games
-- multithreading for reading from engine + updating things on screen etc. etc.
 - promoting pick piece
 
 Idea:
@@ -31,12 +35,6 @@ Idea 2:
 - Screen contains a generic pointer to a Controller class
 - All concrete controllers inherit from the Controller class
 - Generic Controller has some functions (template or strategy visitor?) for saving the state to a json file with a timestamp
-
-Idea 3: -> not worth it.
-- Screen class also behaves like template by implementing skeleton of both the state handlers so we don't repeat shit
-
-Three threads:
-3. engine communication [todo]
 
 too many files and threads running around!
 - need to simplify things

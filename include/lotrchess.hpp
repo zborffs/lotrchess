@@ -38,6 +38,7 @@ public:
     virtual ~Screen() = default;
     virtual void process_event(sf::Event& event) = 0;
     virtual void draw(sf::RenderWindow& window) = 0;
+    virtual void update() {}
 
     void set_context(LOTRChess* context) {
         this->context_ = context;

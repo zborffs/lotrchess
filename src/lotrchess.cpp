@@ -5,10 +5,10 @@
  * @param init_mode the mode to start in
  */
 LOTRChess::LOTRChess(std::unique_ptr<Screen> init_mode)
-    : screen_(std::move(init_mode)),
-      window_(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE),
-      music_player_(MUSIC_PATHS) {
-  screen_->set_context(this); // set the context of the new state to 'this'
+        : screen_(std::move(init_mode)),
+          window_(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE),
+          music_player_(MUSIC_PATHS) {
+    screen_->set_context(this); // set the context of the new state to 'this'
 
     /// boilerplate initialization of window objects
     window_.setFramerateLimit(FPS_LIMIT); // set the frame rate limit
@@ -31,9 +31,9 @@ LOTRChess::~LOTRChess() {
  * transitions to another game mode (like splash mode, battle setup mode, playmode)
  * @param mode a pointer to the mode object to switch to
  */
-void LOTRChess::transition_to(Screen * mode) {
-  screen_.reset(mode); // destroy previous state and setup new state pointer
-  screen_->set_context(this); // set the state context of the new state to 'this'
+void LOTRChess::transition_to(Screen *mode) {
+    screen_.reset(mode); // destroy previous state and setup new state pointer
+    screen_->set_context(this); // set the state context of the new state to 'this'
 }
 
 /**
@@ -51,6 +51,7 @@ void LOTRChess::operator()() {
         }
 
         ImGui::SFML::Update(window_, delta_clock_.restart()); // let SFML update the window
+        screen_->update();
 
         window_.clear(); // clear the window
         ImGui::SFML::Render(window_); // render the window
@@ -59,3 +60,4 @@ void LOTRChess::operator()() {
         window_.display(); // display the window
     }
 }
+
