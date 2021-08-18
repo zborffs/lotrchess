@@ -112,6 +112,39 @@ public:
         return xf <= max_x && xf >= min_x && yf <= max_y && yf >= min_y;
     }
 
+    bool in_tough(int x, int y) {
+        auto min_x = difficulty_option_text_[0].getGlobalBounds().left;
+        auto max_x = min_x + difficulty_option_text_[0].getGlobalBounds().width;
+        auto min_y = difficulty_option_text_[0].getGlobalBounds().top;
+        auto max_y = min_y + difficulty_option_text_[0].getGlobalBounds().height;
+        auto xf = static_cast<float>(x);
+        auto yf = static_cast<float>(y);
+
+        return xf <= max_x && xf >= min_x && yf <= max_y && yf >= min_y;
+    }
+
+    bool in_hard(int x, int y) {
+        auto min_x = difficulty_option_text_[1].getGlobalBounds().left;
+        auto max_x = min_x + difficulty_option_text_[1].getGlobalBounds().width;
+        auto min_y = difficulty_option_text_[1].getGlobalBounds().top;
+        auto max_y = min_y + difficulty_option_text_[1].getGlobalBounds().height;
+        auto xf = static_cast<float>(x);
+        auto yf = static_cast<float>(y);
+
+        return xf <= max_x && xf >= min_x && yf <= max_y && yf >= min_y;
+    }
+
+    bool in_impossible(int x, int y) {
+        auto min_x = difficulty_option_text_[2].getGlobalBounds().left;
+        auto max_x = min_x + difficulty_option_text_[2].getGlobalBounds().width;
+        auto min_y = difficulty_option_text_[2].getGlobalBounds().top;
+        auto max_y = min_y + difficulty_option_text_[2].getGlobalBounds().height;
+        auto xf = static_cast<float>(x);
+        auto yf = static_cast<float>(y);
+
+        return xf <= max_x && xf >= min_x && yf <= max_y && yf >= min_y;
+    }
+
     bool in_selected(int x, int y) {
         auto min_x = select_.getGlobalBounds().left;
         auto max_x = min_x + select_.getGlobalBounds().width;
@@ -127,8 +160,20 @@ public:
         for (auto& m : color_option_text_) {
             m.setFillColor(DEFAULT_FONT_COLOR);
         }
+
+        for (auto& m : difficulty_option_text_) {
+            m.setFillColor(DEFAULT_FONT_COLOR);
+        }
+
         if (dialog.human_color() != Color::BOTH) {
             color_option_text_[dialog.human_color()].setFillColor(SELECTED_FONT_COLOR);
+        }
+
+        if (dialog.engine() != Engine::NO_ENGINE) {
+            difficulty_option_text_[dialog.engine()].setFillColor(SELECTED_FONT_COLOR);
+        }
+
+        if (dialog.human_color() != Color::BOTH && dialog.engine() != Engine::NO_ENGINE) {
             select_.setFillColor(SELECTED_FONT_COLOR);
         }
     }

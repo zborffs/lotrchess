@@ -28,11 +28,7 @@ public:
         return human_color_;
     }
 
-    [[nodiscard]] inline Engine general() noexcept {
-        return engine_;
-    }
-
-    [[nodiscard]] inline Engine general() const noexcept {
+    [[nodiscard]] inline Engine engine() noexcept {
         return engine_;
     }
 

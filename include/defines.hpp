@@ -26,21 +26,6 @@ using Centipawns_t = int32_t; // for Evaluation
 
 #define C64(constantuint64) constantuint64 ##ULL
 
-
-struct WindowData {
-    unsigned int width;
-    unsigned int height;
-    unsigned int fps_limit;
-    float scale_factor;
-    float font_scale_factor;
-    std::string title;
-
-    WindowData(unsigned int width, unsigned int height, unsigned int fps_limit,
-               float scale_factor, float font_scale_factor, std::string title) :
-            width(width), height(height), fps_limit(fps_limit), scale_factor(scale_factor),
-            font_scale_factor(font_scale_factor), title(std::move(title)) {}
-};
-
 enum ResultFlag {
     DRAW = 0,
     STALEMATE = 1,
@@ -73,10 +58,10 @@ enum SplashSelector {
  *   - Black: Witch King of Angmar
  */
 enum Engine {
-    CPW = 0, // going to need another one
-    Senpai = 1,
-    Prometheus = 2,
-    Stockfish = 3
+    Senpai = 0, // going to need another one
+    Prometheus = 1,
+    Stockfish = 2,
+    NO_ENGINE = 3
 };
 
 enum Square : uint8_t {

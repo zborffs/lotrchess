@@ -27,7 +27,6 @@ class EngineInterface {
 private:
     /// engine enum to path map
     std::unordered_map<Engine, std::string> ENGINE_PATH_MAP{{ // should be const but making it const messes things up
-        {CPW, "../../res/engine/senpai"},
         {Senpai, "../../res/engine/senpai"},
         {Prometheus, "../../res/engine/senpai"},
         {Stockfish, "../../res/engine/senpai"}

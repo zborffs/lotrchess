@@ -14,12 +14,24 @@ void BattleSetupScreen::process_event(sf::Event& event) {
         if (view_.in_white(x, y)) {
             controller_.set_human_color(WHITE);
             view_.update_options(controller_);
-            spdlog::info("Choosing White");
+            spdlog::info("Player selected White");
         } else if (view_.in_black(x, y)) {
             controller_.set_human_color(BLACK);
             view_.update_options(controller_);
-            spdlog::info("Choosing Black");
-        } else if (controller_.human_color() != BOTH && view_.in_selected(x, y)) {
+            spdlog::info("Player selected Black");
+        } else if (view_.in_tough(x, y)) {
+            controller_.set_engine(Senpai);
+            view_.update_options(controller_);
+            spdlog::info("Player selected Tough (0) ~ Senpai");
+        } else if (view_.in_hard(x, y)) {
+            controller_.set_engine(Prometheus);
+            view_.update_options(controller_);
+            spdlog::info("Player selected Hard (1) ~ Prometheus");
+        } else if (view_.in_impossible(x, y)) {
+            controller_.set_engine(Stockfish);
+            view_.update_options(controller_);
+            spdlog::info("Player selected Impossible (2) ~ Stockfish");
+        } else if (controller_.human_color() != BOTH && controller_.engine() != NO_ENGINE && view_.in_selected(x, y)) {
             spdlog::info("Game Setup Complete... Starting Game.");
             context_->music_player_.play_startup_music(controller_.human_color());
             context_->transition_to(new PlayScreen(controller_.human_color(), Prometheus));
