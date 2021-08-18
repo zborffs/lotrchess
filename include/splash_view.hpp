@@ -25,7 +25,7 @@ private:
     const unsigned int large_font_size{72};
 
 public:
-  SplashView()  {
+    SplashView() {
         // configure the background
         bg_texture_.loadFromFile(SPLASH_BG_PATH);
         bg_.setTexture(bg_texture_);
@@ -48,19 +48,20 @@ public:
 
         float vert_offset{115};
         std::size_t index{1};
-        for (auto& mode : mode_selection_text_) {
+        for (auto &mode : mode_selection_text_) {
             mode.setFont(font_);
             mode.setCharacterSize(small_font_size); // arbitrary
             mode.setString(mode_string_[index - 1]);
             mode.setPosition(pos);
-            auto curr_mode_x_offset = (mode.findCharacterPos(mode.getString().getSize()).x - mode.findCharacterPos(0).x) / 2;
+            auto curr_mode_x_offset =
+                    (mode.findCharacterPos(mode.getString().getSize()).x - mode.findCharacterPos(0).x) / 2;
             mode.move(-curr_mode_x_offset, vert_offset * static_cast<float>(index));
             ++index;
         }
     }
 
-    void update_options(SplashController & dialog) {
-        for (auto& m : mode_selection_text_) {
+    void update_options(SplashController &dialog) {
+        for (auto &m : mode_selection_text_) {
             m.setFillColor(DEFAULT_FONT_COLOR);
             m.setCharacterSize(small_font_size);
         }
@@ -71,11 +72,11 @@ public:
         }
     }
 
-    void draw(sf::RenderWindow& window) {
+    void draw(sf::RenderWindow &window) {
         window.draw(bg_);
         window.draw(title_text_);
 
-        for (const auto& m : mode_selection_text_) {
+        for (const auto &m : mode_selection_text_) {
             window.draw(m);
         }
     }
@@ -90,6 +91,7 @@ public:
 
         return xf <= max_x && xf >= min_x && yf <= max_y && yf >= min_y;
     }
+
     bool in_battle(int x, int y) {
         auto min_x = mode_selection_text_[SplashSelector::CustomBattle].getGlobalBounds().left;
         auto max_x = min_x + mode_selection_text_[SplashSelector::CustomBattle].getGlobalBounds().width;
@@ -100,6 +102,7 @@ public:
 
         return xf <= max_x && xf >= min_x && yf <= max_y && yf >= min_y;
     }
+
     bool in_replay(int x, int y) {
         auto min_x = mode_selection_text_[SplashSelector::Replay].getGlobalBounds().left;
         auto max_x = min_x + mode_selection_text_[SplashSelector::Replay].getGlobalBounds().width;
@@ -110,6 +113,7 @@ public:
 
         return xf <= max_x && xf >= min_x && yf <= max_y && yf >= min_y;
     }
+
     bool in_quit(int x, int y) {
         auto min_x = mode_selection_text_[SplashSelector::Quit].getGlobalBounds().left;
         auto max_x = min_x + mode_selection_text_[SplashSelector::Quit].getGlobalBounds().width;

@@ -7,8 +7,8 @@
 #include "play_screen.hpp"
 
 class BattleSetupScreen : public Screen {
-    BattleSetupController dialog_;
-    BattleSetupView dialog_view_;
+    BattleSetupController controller_;
+    BattleSetupView view_;
 
 public:
     explicit BattleSetupScreen() {

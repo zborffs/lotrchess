@@ -36,8 +36,8 @@ public:
         return engine_;
     }
 
-    void toggle_human_color() {
-        human_color_ = human_color_ == WHITE ? BLACK : WHITE;
+    void set_human_color(Color color) {
+        human_color_ = color;
     }
 
     void set_engine(Engine engine) {

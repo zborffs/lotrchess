@@ -7,7 +7,7 @@ MusicPlayer::MusicPlayer(const std::array<std::string, 5>& music_paths) {
     victory_music_[1].openFromFile(music_paths[3]); // black victory
 
     piece_moved_sfx_.openFromFile(music_paths[4]); // piece moved sound effect
-    piece_moved_sfx_.setVolume(0.5);
+    piece_moved_sfx_.setVolume(15.0);
 }
 
 void MusicPlayer::stop_all_music() {
