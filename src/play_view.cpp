@@ -30,18 +30,21 @@ PlayView::PlayView(PlayController& board, sf::Vector2f board_offset, const std::
     }
     white_victory_.setTexture(white_victory_texture_);
     white_victory_.setPosition(board_offset);
+    white_victory_.move(100,100);
 
     if (!black_victory_texture_.loadFromFile(BLACK_VICTORY_TEXTURE)) {
         spdlog::error("Failed to load the black victory texture");
     }
     black_victory_.setTexture(black_victory_texture_);
     black_victory_.setPosition(board_offset);
+    black_victory_.move(100,100);
 
     if (!draw_result_texture_.loadFromFile(DRAW_RESULT_TEXTURE)) {
         spdlog::error("Failed to load the draw result texture");
     }
     draw_result_.setTexture(draw_result_texture_);
     draw_result_.setPosition(board_offset);
+    draw_result_.move(100,100);
 
     // configure the font
     font_.loadFromFile(FONT_PATH);
@@ -50,6 +53,13 @@ PlayView::PlayView(PlayController& board, sf::Vector2f board_offset, const std::
     result_text_.setFont(font_);
     result_text_.setCharacterSize(large_font_size); // arbitrary
     result_text_.setPosition(board_offset);
+    result_text_.move(225, 300);
+
+    return_text_.setFont(font_);
+    return_text_.setCharacterSize(32);
+    return_text_.setPosition(board_offset);
+    return_text_.setString("Return");
+    return_text_.move(600 - 20, 650);
 
     update_pieces(board);
 }
@@ -119,21 +129,25 @@ void PlayView::draw(sf::RenderWindow& window) {
             window.draw(draw_result_);
             result_text_.setString("Draw");
             window.draw(result_text_);
+            window.draw(return_text_);
             break;
         case STALEMATE:
             window.draw(draw_result_);
             result_text_.setString("Stalemate");
             window.draw(result_text_);
+            window.draw(return_text_);
             break;
         case WHITE_VICTORY:
             window.draw(white_victory_);
             result_text_.setString("White Wins");
             window.draw(result_text_);
+            window.draw(return_text_);
             break;
         case BLACK_VICTORY:
             window.draw(black_victory_);
             result_text_.setString("Black Wins");
             window.draw(result_text_);
+            window.draw(return_text_);
             break;
     }
 
@@ -159,4 +173,12 @@ bool PlayView::in_board(int x, int y) {
     auto yf = static_cast<float>(y);
 
     return xf < max_x && xf > min_x && yf < max_y && yf > min_y;
+}
+
+void PlayView::update_return_selected(PlayController& controller) {
+    if (controller.return_selected()) {
+        return_text_.setFillColor(SELECTED_FONT_COLOR);
+    } else {
+        return_text_.setFillColor(DEFAULT_FONT_COLOR);
+    }
 }

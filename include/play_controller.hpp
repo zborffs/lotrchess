@@ -31,6 +31,7 @@ private:
     std::mutex mu_board_;
     bool piece_selected_{false}; // whether the player has clicked on a piece on the board yet!
     ResultFlag result_{NO_RESULT};
+    bool return_selected_{false};
 
     /// non-chess related game-state member variables
     bool as_white_;
@@ -58,6 +59,14 @@ public:
             move_gen_thread_.join();
         }
         spdlog::info("Destroyed PlayController...");
+    }
+
+    [[nodiscard]] inline bool return_selected() {
+        return return_selected_;
+    }
+
+    void set_return_selected(bool return_selected) {
+        return_selected_ = return_selected;
     }
 
     [[nodiscard]] inline char piece_at(const Square sq) {

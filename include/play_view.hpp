@@ -39,6 +39,7 @@ private:
     ResultFlag result_;
 
     sf::Text result_text_;
+    sf::Text return_text_;
     sf::Font font_{};
     const unsigned int small_font_size{42};
     const unsigned int medium_font_size{43};
@@ -68,7 +69,20 @@ public:
         return board_.getPosition();
     }
 
+    bool in_return(int x, int y) {
+        auto min_x = return_text_.getGlobalBounds().left;
+        auto max_x = min_x + return_text_.getGlobalBounds().width;
+        auto min_y = return_text_.getGlobalBounds().top;
+        auto max_y = min_y + return_text_.getGlobalBounds().height;
+        auto xf = static_cast<float>(x);
+        auto yf = static_cast<float>(y);
+
+        return xf <= max_x && xf >= min_x && yf <= max_y && yf >= min_y;
+    }
+
     bool in_board(int x, int y);
+
+    void update_return_selected(PlayController& controller);
 };
 
 #endif // LOTRCHESS_PLAY_VIEW_HPP

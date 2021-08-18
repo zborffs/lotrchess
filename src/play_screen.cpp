@@ -40,6 +40,22 @@ void PlayScreen::process_event(sf::Event &event) {
                 spdlog::info("ESC was pressed...");
                 context_->transition_to(new SplashScreen());
             }
+            break;
+        }
+        case sf::Event::MouseMoved: {
+            int x = event.mouseMove.x;
+            int y = event.mouseMove.y;
+
+            if (board_view_.in_board(x, y)) {
+                if (board_view_.in_return(x, y)) {
+                    controller_.set_return_selected(true);
+                    board_view_.update_return_selected(controller_);
+                } else {
+                    controller_.set_return_selected(false);
+                    board_view_.update_return_selected(controller_);
+                }
+            }
+            break;
         }
         case sf::Event::MouseButtonPressed: {
             int x = event.mouseButton.x;
@@ -48,6 +64,13 @@ void PlayScreen::process_event(sf::Event &event) {
             if (board_view_.in_board(x, y)) {
                 // if the user pressed on the mouse inside the board's bounding box, then figure out what square was clicked
                 sf::Vector2f board_view_offset = board_view_.board_offset();
+
+                if (controller_.result_flag() == DRAW || controller_.result_flag() == WHITE_VICTORY || controller_.result_flag() == BLACK_VICTORY) {
+                    if (board_view_.in_return(x, y)) {
+                        context_->transition_to(new SplashScreen());
+                        return;
+                    }
+                }
 
                 if (controller_.player_promoting()) {
                     spdlog::info("Screen realizes that the player is trying to promote a pawn");

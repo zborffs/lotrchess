@@ -41,7 +41,7 @@ void MusicPlayer::play_startup_music(Color color) {
 }
 
 void MusicPlayer::play_piece_moved_sfx() {
-//    stop_all_music();
+    piece_moved_sfx_.stop();
 
     spdlog::info("Playing piece moved sound effect...");
 
