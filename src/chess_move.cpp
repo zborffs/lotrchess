@@ -367,6 +367,28 @@ std::string ChessMove::to_string() noexcept {
     char to_rank = (this->to_sq / 8) + '1';
 
     std::string ret{from_file, from_rank, to_file, to_rank};
+
+    if (this->promoted() != NO_PIECE) {
+        switch (this->promoted()) {
+            case W_QUEEN:
+            case B_QUEEN:
+                ret += 'q';
+                break;
+            case W_KNIGHT:
+            case B_KNIGHT:
+                ret += 'n';
+                break;
+            case W_BISHOP:
+            case B_BISHOP:
+                ret += 'b';
+                break;
+            case W_ROOK:
+            case B_ROOK:
+                ret += 'r';
+                break;
+        }
+    }
+
     return ret;
 }
 

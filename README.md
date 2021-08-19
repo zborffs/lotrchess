@@ -4,7 +4,6 @@
 
 ## Art Contributions
 - Huge thanks to Erica Hannania for making the board and piece sprites
-- Huge thanks to [Darek Zabrocki](https://www.deviantart.com/darekzabrocki/about) for making the white and black victory cards 
 
 ## Download and Install
 - the only way of installing the app at the moment is to build it from source:

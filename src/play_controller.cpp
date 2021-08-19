@@ -1,6 +1,7 @@
 #include "play_controller.hpp"
 
-PlayController::PlayController(Color player_color, Engine engine, const std::string& fen) : board_(fen), as_white_(player_color != BLACK), player_color_(player_color), highlights_({}), engine_io_(engine) {
+PlayController::PlayController(Color player_color, Engine engine, const std::string &fen) : board_(fen), as_white_(
+        player_color != BLACK), player_color_(player_color), highlights_({}), engine_io_(engine) {
     /// move generation thread initialization
     if (board_.side_2_move() == player_color_) {
         std::thread t(&PlayController::gen_moves, this);
@@ -25,7 +26,7 @@ void PlayController::add_highlight(Square_t sq) {
 
     highlights_.clear(); // clear the highlights
 
-    for (const auto& m : legal_moves_) {
+    for (const auto &m : legal_moves_) {
         if (m.from_sq == sq) {
             highlights_.push_back(m.to_sq);
         }
@@ -90,7 +91,7 @@ void PlayController::gen_moves() {
 
     gen_all_moves(board_, legal_moves_);
 
-    for (auto itr = legal_moves_.begin(); itr != legal_moves_.end(); ) {
+    for (auto itr = legal_moves_.begin(); itr != legal_moves_.end();) {
 //        spdlog::info("Board::Key, before make: {}", board_.key());
         board_.make_move(*itr);
         if (board_.is_king_checked(!board_.side_2_move())) {
@@ -174,8 +175,10 @@ bool PlayController::check_result() {
 
         /// User "to square" Square_t to figure out the piece that was captured
         ptc = board_.piece_type(to_sq);
-        assert(ptc == PieceType::NO_PIECE || ptc % 2 != ptm % 2); // make sure there are no captures, or the piece colors aren't the
-        if (ptc != PieceType::NO_PIECE && ptc % 2 == ptm % 2) { /// make sure captured piece is not the same color as moved piece
+        assert(ptc == PieceType::NO_PIECE ||
+               ptc % 2 != ptm % 2); // make sure there are no captures, or the piece colors aren't the
+        if (ptc != PieceType::NO_PIECE &&
+            ptc % 2 == ptm % 2) { /// make sure captured piece is not the same color as moved piece
             spdlog::error("Argument error ptc is same color as ptm.");
             return false;
         }
@@ -185,11 +188,14 @@ bool PlayController::check_result() {
             flags = CAPTURE_MOVE;
 
             /// If it was an en-passant move, then set the en passant flag
-        } else if (((ptm == PieceType::W_PAWN && (to_sq - from_sq == 9 || to_sq - from_sq == 7)) || (ptm == PieceType::B_PAWN && (from_sq - to_sq == 9 || from_sq - to_sq == 7))) && to_sq == board_.ep_sq()) {
+        } else if (((ptm == PieceType::W_PAWN && (to_sq - from_sq == 9 || to_sq - from_sq == 7)) ||
+                    (ptm == PieceType::B_PAWN && (from_sq - to_sq == 9 || from_sq - to_sq == 7))) &&
+                   to_sq == board_.ep_sq()) {
             flags = ENPASSANT;
 
             /// if the moved piece was a pawn and it moved 2 squares, then set the double-push-pawn flag
-        } else if ((ptm == PieceType::W_PAWN && to_sq - from_sq == 16 && from_sq / 8 == Rank::RANK2) || (ptm == PieceType::B_PAWN && from_sq - to_sq == 16 && from_sq / 8 == Rank::RANK7)) {
+        } else if ((ptm == PieceType::W_PAWN && to_sq - from_sq == 16 && from_sq / 8 == Rank::RANK2) ||
+                   (ptm == PieceType::B_PAWN && from_sq - to_sq == 16 && from_sq / 8 == Rank::RANK7)) {
             flags = DOUBLE_PUSH_PAWN;
 
             /// If it was a castle, then set the castle flag
@@ -206,13 +212,21 @@ bool PlayController::check_result() {
             if ((ptm == W_PAWN && to_sq / 8 == Rank::RANK8) || (ptm == B_PAWN && to_sq / 8 == Rank::RANK1)) {
                 switch (move[4]) {
                     case 'N':
-                        case 'n': flags = static_cast<MoveFlag>(KNIGHT_PROMO + flags); break;
-                        case 'B':
-                            case 'b': flags = static_cast<MoveFlag>(BISHOP_PROMO + flags); break;
-                            case 'R':
-                                case 'r': flags = static_cast<MoveFlag>(ROOK_PROMO + flags); break;
-                                case 'Q':
-                                    case 'q': flags = static_cast<MoveFlag>(QUEEN_PROMO + flags); break;
+                    case 'n':
+                        flags = static_cast<MoveFlag>(KNIGHT_PROMO + flags);
+                        break;
+                    case 'B':
+                    case 'b':
+                        flags = static_cast<MoveFlag>(BISHOP_PROMO + flags);
+                        break;
+                    case 'R':
+                    case 'r':
+                        flags = static_cast<MoveFlag>(ROOK_PROMO + flags);
+                        break;
+                    case 'Q':
+                    case 'q':
+                        flags = static_cast<MoveFlag>(QUEEN_PROMO + flags);
+                        break;
                 }
             } else {
                 spdlog::error("Argument error size == 5, but from/to_sq invalid for promotion.");
