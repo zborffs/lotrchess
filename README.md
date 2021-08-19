@@ -1,6 +1,5 @@
 # Lord of the Rings: Chess
 - this is a LOTR-themed chess game written in C++ using SFML+ImGui
-- check out a demo [here](https://zborffs.github.io/SFML-ImGui-Chess-UI)
 
 ## Art Contributions
 - Huge thanks to Erica Hannania for making the board and piece sprites
