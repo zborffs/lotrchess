@@ -113,7 +113,7 @@ void PlayView::draw(sf::RenderWindow& window) {
 
     // draw highlights on the board
     for (auto& sq : highlighted_sqs_) {
-        sq.rotate(0.5f);
+        sq.rotate(1.0f); // 0.5f
         window.draw(sq);
     }
 
@@ -150,8 +150,6 @@ void PlayView::draw(sf::RenderWindow& window) {
             window.draw(return_text_);
             break;
     }
-
-
 }
 
 /**

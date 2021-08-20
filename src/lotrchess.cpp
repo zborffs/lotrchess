@@ -56,7 +56,6 @@ void LOTRChess::operator()() {
         window_.clear(); // clear the window
         ImGui::SFML::Render(window_); // render the window
         screen_->draw(window_);
-        screen_->draw(window_);
         window_.display(); // display the window
     }
 }

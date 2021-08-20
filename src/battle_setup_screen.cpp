@@ -34,7 +34,7 @@ void BattleSetupScreen::process_event(sf::Event& event) {
         } else if (controller_.human_color() != BOTH && controller_.engine() != NO_ENGINE && view_.in_selected(x, y)) {
             spdlog::info("Game Setup Complete... Starting Game.");
             context_->music_player_.play_startup_music(controller_.human_color());
-            context_->transition_to(new PlayScreen(controller_.human_color(), Prometheus));
+            context_->transition_to(new PlayScreen(controller_.human_color(), controller_.engine()));
         }
         break;
     }

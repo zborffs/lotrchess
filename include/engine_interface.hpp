@@ -156,8 +156,27 @@ private:
 
     void send_go_command(bp::child& c, bp::ipstream& out_pipe_stream, bp::opstream& in_pipe_stream) {
         auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
-        in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
-        spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 2500");
+
+        switch(engine_) {
+            case Senpai:
+                in_pipe_stream << "go depth 1" << std::endl; // arbitrary
+                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go depth 1");
+                break;
+            case Prometheus:
+                in_pipe_stream << "go depth 8" << std::endl; // arbitrary
+                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go depth 8");
+                break;
+            case Stockfish:
+                in_pipe_stream << "go movetime 3000" << std::endl; // arbitrary
+                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 3000");
+                break;
+            case NO_ENGINE:
+                in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
+                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 5000");
+                break;
+        }
+//        in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
+//        spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 2500");
         std::string line;
         while (c.running() && !check_quit()) {
             std::getline(out_pipe_stream, line);
