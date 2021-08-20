@@ -65,7 +65,7 @@ void PlayScreen::process_event(sf::Event &event) {
                 // if the user pressed on the mouse inside the board's bounding box, then figure out what square was clicked
                 sf::Vector2f board_view_offset = board_view_.board_offset();
 
-                if (controller_.result_flag() == DRAW || controller_.result_flag() == WHITE_VICTORY || controller_.result_flag() == BLACK_VICTORY) {
+                if (controller_.result_flag() == DRAW || controller_.result_flag() == STALEMATE || controller_.result_flag() == WHITE_VICTORY || controller_.result_flag() == BLACK_VICTORY) {
                     if (board_view_.in_return(x, y)) {
                         context_->transition_to(new SplashScreen());
                         return;
