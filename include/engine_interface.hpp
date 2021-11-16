@@ -161,7 +161,7 @@ private:
         switch(engine_) {
             case Senpai:
                 in_pipe_stream << "go depth 3" << std::endl; // arbitrary
-                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go depth 1");
+                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go depth 3");
                 break;
             case Prometheus:
                 in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
@@ -169,7 +169,7 @@ private:
                 break;
             case Stockfish:
                 in_pipe_stream << "go movetime 7500" << std::endl; // arbitrary
-                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 3000");
+                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 7500");
                 break;
             case NO_ENGINE:
                 in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
