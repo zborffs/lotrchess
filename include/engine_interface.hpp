@@ -27,9 +27,9 @@ class EngineInterface {
 private:
     /// engine enum to path map
     std::unordered_map<Engine, std::string> ENGINE_PATH_MAP{{ // should be const but making it const messes things up
-        {Senpai, "../../res/engine/senpai"},
-        {Prometheus, "../../res/engine/senpai"},
-        {Stockfish, "../../res/engine/senpai"}
+        {Senpai, "../../res/engine/prometheus"},
+        {Prometheus, "../../res/engine/prometheus"},
+        {Stockfish, "../../res/engine/prometheus"}
     }};
 
     Engine engine_;
@@ -135,6 +135,7 @@ private:
             }
         }
     }
+
     void send_quit_command(bp::child& c, bp::ipstream& out_pipe_stream, bp::opstream& in_pipe_stream) {
         auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
         in_pipe_stream << "quit" << std::endl;
@@ -159,15 +160,15 @@ private:
 
         switch(engine_) {
             case Senpai:
-                in_pipe_stream << "go depth 1" << std::endl; // arbitrary
+                in_pipe_stream << "go depth 3" << std::endl; // arbitrary
                 spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go depth 1");
                 break;
             case Prometheus:
-                in_pipe_stream << "go depth 8" << std::endl; // arbitrary
-                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go depth 8");
+                in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
+                spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 5000");
                 break;
             case Stockfish:
-                in_pipe_stream << "go movetime 3000" << std::endl; // arbitrary
+                in_pipe_stream << "go movetime 7500" << std::endl; // arbitrary
                 spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 3000");
                 break;
             case NO_ENGINE:
