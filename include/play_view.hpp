@@ -24,6 +24,8 @@
 class PlayView {
 private:
     sf::Texture board_texture_; // board texture (.png)
+    sf::Texture bg_texture_; // bg texture
+    sf::Sprite bg_; // background (.jpg)
     sf::Sprite board_; // board sprite (drawable object in SFML)
     sf::Texture one_ring_texture_; // one ring texture (.png)
     sf::Sprite one_ring_sprite_; // one ring sprite (drawable obj in SFML)

@@ -26,6 +26,7 @@ extern const std::array<std::string, 5> MUSIC_PATHS;
 extern const std::string SPLASH_BG_PATH;
 extern const std::string FONT_PATH;
 extern const std::string BOARD_TEXTURE_PATH;
+extern const std::string PLAY_BG_PATH;
 extern const std::string ONE_RING_TEXTURE_PATH;
 extern const std::unordered_map<char, std::string> PIECE_TEXTURE_PATH_MAP;
 extern const std::string WHITE_VICTORY_TEXTURE;

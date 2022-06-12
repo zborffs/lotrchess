@@ -31,6 +31,7 @@ const std::array<std::string, 5> MUSIC_PATHS({
                                              });
 const std::string FONT_PATH{"../../res/font/lotr_font.ttf"};
 const std::string SPLASH_BG_PATH{"../../res/img/splash_bg.jpg"};
+const std::string PLAY_BG_PATH{"../../res/img/okayboy.jpg"};
 const std::string BOARD_TEXTURE_PATH{"../../res/img/ChessBoard.png"};
 const std::string ONE_RING_TEXTURE_PATH{"../../res/img/one_ring.png"};
 const std::unordered_map<char, std::string> PIECE_TEXTURE_PATH_MAP{{

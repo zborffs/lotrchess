@@ -9,6 +9,13 @@ PlayView::PlayView(PlayController& board, sf::Vector2f board_offset, const std::
     board_.setTexture(board_texture_);
     board_.setPosition(board_offset); // absolute position
 
+    if (!bg_texture_.loadFromFile(PLAY_BG_PATH)){
+        spdlog::error("Failed to load the playscreen background texture in the PlayView constructor...");
+    }
+    bg_.setTexture(bg_texture_);
+    bg_.scale(0.50, 0.50); // 0.80, 0.80
+    bg_.move(425.0, 75.0); // -50, -150
+
     // initialize one ring texture
     if (!one_ring_texture_.loadFromFile(one_ring_path)) {
         spdlog::error("Failed to load the one ring texture in PlayView constructor...");
@@ -109,6 +116,7 @@ void PlayView::update_pieces(PlayController & board) {
 }
 
 void PlayView::draw(sf::RenderWindow& window) {
+    window.draw(bg_);
     window.draw(board_); // draw the board
 
     // draw highlights on the board
