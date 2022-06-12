@@ -27,9 +27,9 @@ class EngineInterface {
 private:
     /// engine enum to path map
     std::unordered_map<Engine, std::string> ENGINE_PATH_MAP{{ // should be const but making it const messes things up
-        {Senpai, "../../res/engine/prometheus"},
-        {Prometheus, "../../res/engine/prometheus"},
-        {Stockfish, "../../res/engine/prometheus"}
+        {Tough, "../../res/engine/prometheus"},
+        {Hard, "../../res/engine/prometheus"},
+        {Impossible, "../../res/engine/prometheus"}
     }};
 
     Engine engine_;
@@ -159,15 +159,15 @@ private:
         auto thread_id_hash = std::hash<std::thread::id>()(std::this_thread::get_id());
 
         switch(engine_) {
-            case Senpai:
+            case Tough:
                 in_pipe_stream << "go depth 3" << std::endl; // arbitrary
                 spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go depth 3");
                 break;
-            case Prometheus:
+            case Hard:
                 in_pipe_stream << "go movetime 5000" << std::endl; // arbitrary
                 spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 5000");
                 break;
-            case Stockfish:
+            case Impossible:
                 in_pipe_stream << "go movetime 7500" << std::endl; // arbitrary
                 spdlog::info("Thread {} sent: \"{}\"", thread_id_hash, "go movetime 7500");
                 break;
